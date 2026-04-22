@@ -24,8 +24,6 @@
         <rocketmq.version>2.3.1</rocketmq.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <rdf4j.version>3.7.4</rdf4j.version>
-        <onerecord-cargo.version>3.0.0</onerecord-cargo.version>
-        <jnanoid.version>2.0.0</jnanoid.version>
     </properties>
 
     <dependencyManagement>
@@ -65,12 +63,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- SpringCloud Alibaba Sentinel -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
-        </dependency>
-
         <!-- 数据库 -->
         <dependency>
             <groupId>com.efreight</groupId>
@@ -120,67 +112,6 @@
             <groupId>com.efreight</groupId>
             <artifactId>eft-common-swagger</artifactId>
             <version>${eft.version}</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.12.0</version>
-        </dependency>
-
-
-        <!--        &lt;!&ndash; JAX-RS API (javax 版本，兼容 JDK 1.8) &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>javax.ws.rs</groupId>-->
-        <!--            <artifactId>javax.ws.rs-api</artifactId>-->
-        <!--            <version>2.1.1</version>-->
-        <!--        </dependency>-->
-
-        <!-- Jersey 实现 (提供 RuntimeDelegateImpl 和 JAX-RS 服务器功能) -->
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-server</artifactId>
-            <version>2.35</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-common</artifactId>
-            <version>2.35</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <version>2.35</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>2.35</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.jersey.ext</groupId>
-            <artifactId>jersey-spring5</artifactId>
-            <version>2.35</version>
-        </dependency>
-
-        <!-- JAX-RS dependencies removed - migrating to Spring Boot -->
-        <!--
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        -->
-
-
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
         </dependency>
 
         <dependency>
@@ -239,91 +170,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- IATA ONE Record Ontology -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.iata</groupId>-->
-        <!--            <artifactId>onerecord-cargo-ontology</artifactId>-->
-        <!--            <version>${onerecord-cargo.version}</version>-->
-        <!--        </dependency>-->
-
-        <!-- NanoId for ID generation -->
-        <dependency>
-            <groupId>com.aventrix.jnanoid</groupId>
-            <artifactId>jnanoid</artifactId>
-            <version>${jnanoid.version}</version>
-        </dependency>
-
-        <!-- Jakarta CDI API (for dependency injection annotations) -->
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>2.0.2</version>
-        </dependency>
-
-        <!-- SmallRye Config (for @ConfigMapping) - compatible with Java 8 -->
-        <dependency>
-            <groupId>io.smallrye.config</groupId>
-            <artifactId>smallrye-config</artifactId>
-            <version>1.10.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sourceforge.owlapi</groupId>
-            <artifactId>owlapi-distribution</artifactId>
-            <version>5.5.0</version>
-            <exclusions>
-                <!-- 排除传递依赖的 rdf4j-rio-hdt，因为它需要 Java 11，
-                     而项目运行在 Java 8 并使用 rdf4j 3.7.4 -->
-                <exclusion>
-                    <groupId>org.eclipse.rdf4j</groupId>
-                    <artifactId>rdf4j-rio-hdt</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-rdf-api</artifactId>
-            <version>0.5.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
-            <version>2.9.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.vsonnier</groupId>
-            <artifactId>hppcrt</artifactId>
-            <version>0.7.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.tukaani</groupId>
-            <artifactId>xz</artifactId>
-            <version>1.9</version>
-        </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.eclipse.microprofile.rest.client</groupId>-->
-<!--            <artifactId>microprofile-rest-client-api</artifactId>-->
-<!--            <version>1.4.1</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>io.quarkus</groupId>-->
-<!--            <artifactId>quarkus-rest-client-reactive</artifactId>-->
-<!--            <version>2.0</version>-->
-<!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.eclipse.microprofile.rest.client</groupId>-->
-        <!--            <artifactId>microprofile-rest-client-api</artifactId>-->
-        <!--            <version>3.0.1</version>-->
-        <!--        </dependency>-->
-
 
     </dependencies>
 

@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -143,14 +144,14 @@ public class NeOneShipmentData implements Serializable {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("FlightDate")
-    private String flightDate;
+    private LocalDate flightDate;
 
     @JsonProperty("FlightNo2")
     private String flightNo2;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("FlightDate2")
-    private String flightDate2;
+    private LocalDate flightDate2;
 
     @JsonProperty("ArrivalLocationID1")
     private String arrivalLocationID1;
@@ -214,7 +215,7 @@ public class NeOneShipmentData implements Serializable {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("ActualDateTime")
-    private String actualDateTime;
+    private LocalDate actualDateTime;
 
     @JsonProperty("IssueAuthenticationLocation")
     private String issueAuthenticationLocation;

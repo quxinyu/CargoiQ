@@ -1,1 +1,0 @@
-import{aN as a,aS as e,B as r,o as s}from"./vendor.DI7_FTCo.js";const t={__name:"index",setup(t){const o=a(),p=e(),{params:n,query:m}=o,{path:u}=n;return p.replace({path:`/${u}`,query:m}),(a,e)=>(s(),r("div"))}};export{t as default};

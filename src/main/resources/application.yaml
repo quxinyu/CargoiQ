@@ -1,0 +1,183 @@
+server:
+  port: ${SERVER_PORT:6041}
+  servlet:
+    context-path: ${SERVER_CONTEXT_PATH:/cargoid}
+
+spring:
+  application:
+    name: eft-module-cargoid
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 200MB
+  datasource:
+    name: dev
+    url: jdbc:mysql://192.168.6.59:3306/one-record-dev?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: efreight@2023
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat, wall, logback
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  redis-template:
+    timeout: 3600
+  redis:
+    database: 0
+    host: 192.168.6.59
+    port: 6379
+    password: RedisDBforeFt2023
+    timeout: 2000
+
+redisson:
+  keyPrefix:
+  threads: 4
+  nettyThreads: 8
+  locker:
+    waitTime: 5000
+    leaseTime: 10000
+  singleServerConfig:
+    clientName: ${spring.application.name}
+    connectionMinimumIdleSize: 8
+    connectionPoolSize: 32
+    idleConnectionTimeout: 10000
+    timeout: 3000
+    subscriptionConnectionPoolSize: 50
+
+swagger:
+  enabled: true
+  title: one-record
+  description: eft-module-ne-one-server
+  basePackage: com.efreight.base.module.one.record.neone.controller
+  version: 1.0.0
+
+ne:
+  one:
+    auth:
+      access:
+        token:
+          url: http://172.16.10.181:8989/realms/neone/protocol/openid-connect/token
+      client:
+        secret: lx7ThS5aYggdsMm42BP3wMrVqKm9WpNY
+    cache:
+      token:
+        key: ne.one.access.token
+
+logistics:
+  object:
+    event:
+      push:
+        url: http://domain:8080/oms/one-r/event/save
+
+rocketmq:
+  enabled: false
+
+lo-id-config:
+  host: 192.168.3.181
+  port: 6869
+  scheme: http
+  internal-iri-scheme: neone
+  root-path: /api/neone/
+  random-id-strategy: UUID
+
+neone:
+  server:
+    config:
+      version: v3
+      base-iri: https://one.efreight.cn/api
+      token-expire-hours: 2
+      refresh-token-expire-hours: 24
+      enable-multi-tenant: false
+      enable-auth: true
+      lo-json-format-object-output: true
+      allow-request-secret-groups:
+        - client_id: PACTL_ONE_API
+          client_secret: KDSUPh44ik
+          grant_type: client_credentials
+          username: cx
+          password: P8@cKfZKE1
+        - client_id: PACTL_ONE_API
+          client_secret: BSSUPh@34ik
+          grant_type: client_credentials
+          username: time_matters
+          password: 18@cKfZK!@1
+        - client_id: neone-client
+          client_secret: aX8JpD3zQwUv2Kj5bL7TnM9YrP4sEhFg
+          grant_type: client_credentials
+          username: huX7mL9nQ2
+          password: fK2#pL5@mN3xT
+      ignore-interceptor-urls:
+        - /base/lo
+        - /lo/exchange/**
+        - /hello/test
+        - /server/**
+        - /sn/**
+        - /se/**
+      has-supported-logistics-object-types:
+        - Waybill
+        - Booking
+      has-supported-subscriptions-types:
+        - Waybill
+        - Booking
+        - LogisticsEvents
+
+neone-server:
+  supported-content-types:
+    - application/ld+json
+    - application/json
+  supported-languages:
+    - en
+    - zh
+  data-holder:
+    id: efreight
+    name: efreight
+
+notification:
+  client-url: http://localhost:8080
+  connect-timeout: 5000
+  read-timeout: 30000
+  send-interval: 60000
+  forward: false
+
+neone-event-service:
+  validate-subscribers: false
+
+action-request:
+  client:
+    url: AAA
+    connect-timeout: 5000
+    read-timeout: 30000
+
+auto-accept-action-requests: true
+authorize-creator: true
+
+graphdb:
+  repository-type: http
+  http:
+    url: http://192.168.6.59:7200/repositories/neone
+    username:
+    password:
+  local:
+    data-dir: ${CARGOID_GRAPHDB_LOCAL_DIR:./data/graphdb}
+  sparql:
+    query-endpoint: ${CARGOID_GRAPHDB_SPARQL_QUERY:}
+    update-endpoint: ${CARGOID_GRAPHDB_SPARQL_UPDATE:}

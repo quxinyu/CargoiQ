@@ -1,0 +1,92 @@
+# LogisticsObject ID 配置示例
+lo-id-config:
+  # 主机地址（可选，默认使用服务器规范主机名）
+  host: localhost
+  # 端口号（可选）
+  port: "8080"
+  # 协议（默认: https）
+  scheme: https
+  # 内部 IRI 方案（默认: neone）
+  internal-iri-scheme: neone
+  # 根路径（默认: /）
+  root-path: /
+  # 随机 ID 策略（默认: UUID）
+  # 可选值: UUID, NANOID, CUSTOM
+  random-id-strategy: UUID
+
+# NeOne 服务器配置示例
+neone-server:
+  # 支持的内容类型
+  supported-content-types:
+    - application/ld+json
+    - application/json
+  # 支持的语言
+  supported-languages:
+    - en
+    - zh
+  # 数据持有者信息
+  data-holder:
+    id: test-data-holder
+    name: Test Data Holder
+
+# 通知服务配置示例
+notification:
+  # 通知客户端基础 URL
+  # 默认: http://localhost:8080
+  client-url: http://localhost:8080
+  # 连接超时时间（毫秒，默认: 5000ms）
+  connect-timeout: 5000
+  # 读取超时时间（毫秒，默认: 30000ms）
+  read-timeout: 30000
+
+  # 定时任务调度配置
+  # send-interval: 通知发送定时任务的执行间隔（毫秒，默认: 60000ms）
+  # 用于 NotificationService 的 @Scheduled 注解配置
+  # 同时作为 fixedRate（执行间隔）和 initialDelay（初始延迟）使用
+  send-interval: 60000
+
+  # 是否转发通知（默认: false）
+  # 当设置为 true 时，会将接收到的通知转发给其他订阅者
+  # 当设置为 false 时，只清除缓存的物流对象
+  forward: false
+
+# NeOne 事件服务配置示例
+neone-event-service:
+  # 是否验证订阅者
+  # 当设置为 true 时，会调用通知服务验证哪些公司应该接收通知
+  # 当设置为 false 时，会通知所有订阅者
+  # 默认: false
+  validate-subscribers: false
+
+# 订阅请求客户端配置示例
+action-request:
+  client:
+    # Action Request 客户端基础 URL
+    # 用于请求外部服务器来评估订阅请求状态
+    # 默认: AAA
+    url: AAA
+    # 连接超时时间（毫秒，默认: 5000ms）
+    connect-timeout: 5000
+    # 读取超时时间（毫秒，默认: 30000ms）
+    read-timeout: 30000
+
+# 订阅配置示例
+# 是否自动接受订阅请求
+# 当设置为 true 时，订阅请求会自动被接受（状态变为 REQUEST_ACCEPTED）
+# 当设置为 false 时，订阅请求需要手动通过接口更新状态
+# 默认: true
+auto-accept-action-requests: true
+
+# 是否授权创建者
+# 当设置为 true 时，会为创建的订阅请求设置 ACL 权限
+# 当设置为 false 时，不设置创建者权限
+# 默认: false
+authorize-creator: false
+
+# GraphDB 配置
+graphdb:
+  repository-type: http
+  http:
+    url: http://localhost:7200/repositories/neone
+    username: admin
+    password: root

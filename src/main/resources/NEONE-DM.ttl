@@ -1,0 +1,301 @@
+@prefix : <https://www.openlogisticsfoundation.org/neone#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://www.openlogisticsfoundation.org/neone#> .
+
+<https://www.openlogisticsfoundation.org/neone> rdf:type owl:Ontology ;
+                                                 owl:imports <https://onerecord.iata.org/api/2.0.0-dev> ,
+                                                             <https://onerecord.iata.org/cargo/> .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://www.openlogisticsfoundation.org/neone#describes
+:describes rdf:type owl:ObjectProperty ;
+           owl:inverseOf :isDescribedBy ;
+           rdfs:domain :LogisticsObjectMetadata ,
+                       :NotificationMetadata ,
+                       :SubscriptionMetadata .
+
+
+###  https://www.openlogisticsfoundation.org/neone#hasNotification
+:hasNotification rdf:type owl:ObjectProperty ;
+                 rdfs:range <https://onerecord.iata.org/api#Notification> ;
+                 rdfs:comment "Denotes that a subject has an associated notification."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#hasState
+:hasState rdf:type owl:ObjectProperty ;
+          rdfs:domain :NeoneEvent ;
+          rdfs:range :NeoneEventState ;
+          rdfs:comment "Indicates that this event has a certain state."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#hasType
+:hasType rdf:type owl:ObjectProperty ;
+         rdfs:domain :NeoneEvent ;
+         rdfs:range :NeoneEventType ;
+         rdfs:comment "indicates that this event is of the specified type."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#isDescribedBy
+:isDescribedBy rdf:type owl:ObjectProperty ;
+               rdfs:range :LogisticsObjectMetadata .
+
+
+###  https://www.openlogisticsfoundation.org/neone#loType
+:loType rdf:type owl:ObjectProperty ;
+        rdfs:domain :NeoneEvent .
+
+
+###  https://www.openlogisticsfoundation.org/neone#referencesLogisticsObject
+:referencesLogisticsObject rdf:type owl:ObjectProperty ;
+                           rdfs:range <https://onerecord.iata.org/cargo/LogisticsObject> ;
+                           rdfs:comment "Indicates that this subject has a reference to a logistics object."@en .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://www.openlogisticsfoundation.org/neone#callbackUrl
+:callbackUrl rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Callback ,
+                         :NotificationMetadata ;
+             rdfs:range xsd:anyURI ;
+             rdfs:comment "The callback url for this Callback."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#hasEvent
+:hasEvent rdf:type owl:DatatypeProperty ;
+          rdfs:domain :NotificationMetadata ;
+          rdfs:range xsd:anyURI ;
+          rdfs:comment "Link to the event the metadata refers to." .
+
+
+###  https://www.openlogisticsfoundation.org/neone#hasPredefinedIri
+:hasPredefinedIri rdf:type owl:DatatypeProperty ;
+                  rdfs:domain :LogisticsObjectMetadata ;
+                  rdfs:range xsd:boolean ;
+                  rdfs:comment "If true, the IRI of the subject was not internally defined by the system, but given from outside" .
+
+
+###  https://www.openlogisticsfoundation.org/neone#hasRevision
+:hasRevision rdf:type owl:DatatypeProperty ;
+             rdfs:domain :LogisticsObjectMetadata ;
+             rdfs:range xsd:nonNegativeInteger ;
+             rdfs:comment "Revision of this logistics object, starts with 0. If greater than 0 it has been changed."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#includeLogisticsObject
+:includeLogisticsObject rdf:type owl:DatatypeProperty ;
+                        rdfs:domain :Callback ,
+                                    :NotificationMetadata ;
+                        rdfs:range xsd:boolean ;
+                        rdfs:comment "Indicates that referenced LogisticsObjects should be included."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#isCreatedAt
+:isCreatedAt rdf:type owl:DatatypeProperty ;
+             rdfs:domain [ rdf:type owl:Class ;
+                           owl:unionOf ( :LogisticsObjectMetadata
+                                         :Snapshot
+                                       )
+                         ] ;
+             rdfs:range xsd:dateTime ;
+             rdfs:comment "The point in time the subject was created."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#payload
+:payload rdf:type owl:DatatypeProperty ;
+         rdfs:domain :Snapshot ;
+         rdfs:range xsd:string ;
+         rdfs:comment "e.g. string content (Json LD) of some LogisticsObject" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://onerecord.iata.org/api#Notification
+<https://onerecord.iata.org/api#Notification> rdf:type owl:Class .
+
+
+###  https://www.openlogisticsfoundation.org/neone#Callback
+:Callback rdf:type owl:Class ;
+          rdfs:subClassOf [ rdf:type owl:Restriction ;
+                            owl:onProperty :hasNotification ;
+                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass <https://onerecord.iata.org/api#Notification>
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :callbackUrl ;
+                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onDataRange xsd:anyURI
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :includeLogisticsObject ;
+                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onDataRange xsd:boolean
+                          ] ;
+          rdfs:comment "Describes a callback to be executed for the referenced notification"@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#LogisticsObjectMetadata
+:LogisticsObjectMetadata rdf:type owl:Class ;
+                         rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                           owl:onProperty :describes ;
+                                           owl:cardinality "1"^^xsd:nonNegativeInteger
+                                         ] ,
+                                         [ rdf:type owl:Restriction ;
+                                           owl:onProperty :hasRevision ;
+                                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                           owl:onDataRange xsd:nonNegativeInteger
+                                         ] ,
+                                         [ rdf:type owl:Restriction ;
+                                           owl:onProperty :isCreatedAt ;
+                                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                           owl:onDataRange xsd:dateTime
+                                         ] ,
+                                         [ rdf:type owl:Restriction ;
+                                           owl:onProperty :hasPredefinedIri ;
+                                           owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                           owl:onDataRange xsd:boolean
+                                         ] .
+
+
+###  https://www.openlogisticsfoundation.org/neone#NeoneEvent
+:NeoneEvent rdf:type owl:Class ;
+            rdfs:subClassOf [ rdf:type owl:Restriction ;
+                              owl:onProperty :hasState ;
+                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                              owl:onClass :NeoneEventState
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :hasType ;
+                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                              owl:onClass :NeoneEventType
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :loType ;
+                              owl:cardinality "1"^^xsd:nonNegativeInteger
+                            ] ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :referencesLogisticsObject ;
+                              owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                              owl:onClass <https://onerecord.iata.org/cargo/LogisticsObject>
+                            ] ;
+            rdfs:comment "An event that occured during the processing of logistics objects."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#NeoneEventState
+:NeoneEventState rdf:type owl:Class ;
+                 owl:equivalentClass [ rdf:type owl:Class ;
+                                       owl:oneOf ( :NEW
+                                                   :PENDING
+                                                   :PROCESSED
+                                                 )
+                                     ] ;
+                 rdfs:comment "The state of an event."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#NeoneEventType
+:NeoneEventType rdf:type owl:Class ;
+                owl:equivalentClass [ rdf:type owl:Class ;
+                                      owl:oneOf ( :OBJECT_CREATED
+                                                  :OBJECT_UPDATED
+                                                )
+                                    ] ;
+                rdfs:comment "The type of an event."@en .
+
+
+###  https://www.openlogisticsfoundation.org/neone#NotificationMetadata
+:NotificationMetadata rdf:type owl:Class ;
+                      rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                        owl:onProperty :describes ;
+                                        owl:cardinality "1"^^xsd:nonNegativeInteger
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty :callbackUrl ;
+                                        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                        owl:onDataRange xsd:anyURI
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty :hasEvent ;
+                                        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                        owl:onDataRange xsd:anyURI
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty :includeLogisticsObject ;
+                                        owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                        owl:onDataRange xsd:boolean
+                                      ] .
+
+
+###  https://www.openlogisticsfoundation.org/neone#Snapshot
+:Snapshot rdf:type owl:Class ;
+          rdfs:subClassOf [ rdf:type owl:Restriction ;
+                            owl:onProperty :referencesLogisticsObject ;
+                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onClass <https://onerecord.iata.org/cargo/LogisticsObject>
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :isCreatedAt ;
+                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onDataRange xsd:dateTime
+                          ] ,
+                          [ rdf:type owl:Restriction ;
+                            owl:onProperty :payload ;
+                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                            owl:onDataRange xsd:string
+                          ] ;
+          rdfs:comment "A LogisticsObject as it was at a certain point in time" .
+
+
+###  https://www.openlogisticsfoundation.org/neone#SubscriptionMetadata
+:SubscriptionMetadata rdf:type owl:Class ;
+                      rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                        owl:onProperty :describes ;
+                                        owl:cardinality "1"^^xsd:nonNegativeInteger
+                                      ] ,
+                                      [ rdf:type owl:Restriction ;
+                                        owl:onProperty :callbackUrl ;
+                                        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                        owl:onDataRange xsd:anyURI
+                                      ] .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  https://www.openlogisticsfoundation.org/neone#NEW
+:NEW rdf:type owl:NamedIndividual ,
+              :NeoneEventState .
+
+
+###  https://www.openlogisticsfoundation.org/neone#OBJECT_CREATED
+:OBJECT_CREATED rdf:type owl:NamedIndividual ,
+                         :NeoneEventType .
+
+
+###  https://www.openlogisticsfoundation.org/neone#OBJECT_UPDATED
+:OBJECT_UPDATED rdf:type owl:NamedIndividual ,
+                         :NeoneEventType .
+
+
+###  https://www.openlogisticsfoundation.org/neone#PENDING
+:PENDING rdf:type owl:NamedIndividual ,
+                  :NeoneEventState .
+
+
+###  https://www.openlogisticsfoundation.org/neone#PROCESSED
+:PROCESSED rdf:type owl:NamedIndividual ,
+                    :NeoneEventState .
+
+
+###  Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi

@@ -1,0 +1,12 @@
+${AnsiColor.BRIGHT_RED}
+    _   ________        ____  _   ________
+   / | / / ____/  _    / __ \/ | / / ____/
+  /  |/ / __/    (_)  / / / /  |/ / __/
+ / /|  / /___   _    / /_/ / /|  / /___
+/_/ |_/_____/  (_)   \____/_/ |_/_____/
+                                                                                                                                                                                                                                                                      \______/
+
+${AnsiColor.BRIGHT_GREEN}
+Spring Application Name: ${spring.application.name}
+Spring Boot Version: ${spring-boot.version}
+${AnsiColor.GREEN}

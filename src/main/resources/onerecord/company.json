@@ -1,0 +1,26 @@
+{
+  "@context": {
+    "cargo": "https://onerecord.iata.org/ns/cargo#"
+  },
+  "@type": [
+    "cargo:Company"
+  ],
+  "cargo:name": "翌飞锐特电子商务（北京）有限公司",
+  "cargo:shortName": "efreight",
+  "cargo:address": "北京市顺义区远洋盈创健康产业园3号楼301",
+  "cargo:category": "航空物流电子化赋能平台",
+  "cargo:contactPersons": [
+    {
+      "@type": [
+        "cargo:Person",
+        "cargo:Actor",
+        "cargo:LogisticsAgent",
+        "cargo:LogisticsObject"
+      ],
+      "cargo:firstName": "史鸣飞",
+      "cargo:lastName": "史鸣飞",
+      "cargo:salutation": "史总",
+      "cargo:contactMethod": ""
+    }
+  ]
+}

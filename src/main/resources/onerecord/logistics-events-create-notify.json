@@ -1,0 +1,19 @@
+{
+  "@context": {
+    "api": "https://onerecord.iata.org/ns/api#"
+  },
+  "@type": "api:Notification",
+  "api:hasEventType": {
+    "@id": "api:LOGISTICS_EVENT_RECEIVED"
+  },
+  "api:hasLogisticsObject": {
+    "@id": "{{baseUrl}}/logistics-objects/{{objectLoId}}"
+  },
+  "api:hasLogisticsObjectType": {
+    "@type": "http://www.w3.org/2001/XMLSchema#anyURI",
+    "@value": "https://onerecord.iata.org/ns/cargo#Waybill"
+  },
+  "api:hasLogisticsEvent": {
+    "@id": "{{baseUrl}}/logistics-objects/{{objectLoId}}/logistics-events/{{objectEventLoId}}"
+  }
+}

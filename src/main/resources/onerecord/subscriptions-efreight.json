@@ -1,0 +1,35 @@
+{
+  "@context": {
+    "cargo": "https://onerecord.iata.org/ns/cargo#",
+    "api": "https://onerecord.iata.org/ns/api#",
+    "publisher": "https://1r.example.com/",
+    "subscriber": "https://1r.example.com/"
+  },
+  "@type": "Subscription",
+  "api:contentType": "application/ld+json",
+  "api:hasSubscriber": {
+    "@id": "https://1r.example.com/logistics-objects/957e2622-9d31-493b-8b8f-3c805064dbda"
+  },
+  "api:hasSubscriptionLogisticsObjectType": "LOGISTICS_OBJECT",
+  "api:hasSubscriptionLogisticsObjectNumbers": [
+    "784-","785-,"
+  ],
+  "api:hasSubscriptionFhl": true,
+  "api:hasSubscriptionFsuCodes": [
+    "RCS","RCF"
+  ],
+  "api:hasSubscriptionFlightNumbers": "CA683",
+  "api:hasSubscriptionDepartureCodes": [
+     "BCK", "CSF"
+  ],
+  "api:hasSubscriptionArrivalCodes":[
+     "BKD", "CSF"
+  ],
+  "api:hasTopicType": {
+    "@id": "api:LOGISTICS_OBJECT_EXTERNAL_RULE"
+  },
+  "api:hasTopic": {
+    "@type": "http://www.w3.org/2001/XMLSchema#anyURI",
+    "@value": "https://onerecord.iata.org/ns/cargo#Subscription"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "@context": {
+    "cargo": "https://onerecord.iata.org/ns/cargo#",
+    "api": "https://onerecord.iata.org/ns/api#"
+  },
+  "@type": "api:Subscription",
+  "api:hasContentType": "application/ld+json",
+  "api:hasSubscriber": {
+    "@id": "{{baseUrl}}/logistics-objects/{{companyId}}"
+  },
+  "api:hasTopicType": {
+    "@id": "api:LOGISTICS_OBJECT_TYPE"
+  },
+  "api:includeSubscriptionEventType": [
+    {
+      "@id": "api:LOGISTICS_OBJECT_UPDATED"
+    },
+    {
+      "@id": "api:LOGISTICS_OBJECT_CREATED"
+    }
+  ],
+  "api:hasTopic": {
+    "@type": "http://www.w3.org/2001/XMLSchema#anyURI",
+    "@value": "https://onerecord.iata.org/ns/cargo#Waybill"
+  }
+}

@@ -89,10 +89,10 @@ public class NeOneShipmentData implements Serializable {
     private String consignorPartyCityName;
 
     @JsonProperty("ConsignorPartyCountryID")
-    private String consignorPartyCountryID;
+    private String consignorPartyCountryId;
 
     @JsonProperty("ConsignorPartyCountrySubDivisionID")
-    private String consignorPartyCountrySubDivisionID;
+    private String consignorPartyCountrySubDivisionId;
 
     @JsonProperty("ConsigneePartyAccountNo")
     private String consigneePartyAccountNo;
@@ -116,10 +116,10 @@ public class NeOneShipmentData implements Serializable {
     private String consigneePartyCityName;
 
     @JsonProperty("ConsigneePartyCountryID")
-    private String consigneePartyCountryID;
+    private String consigneePartyCountryId;
 
     @JsonProperty("ConsigneePartyCountrySubDivisionID")
-    private String consigneePartyCountrySubDivisionID;
+    private String consigneePartyCountrySubDivisionId;
 
     @JsonProperty("FreightForwarderPartyName")
     private String freightForwarderPartyName;
@@ -128,7 +128,7 @@ public class NeOneShipmentData implements Serializable {
     private String freightForwarderPartyAddress;
 
     @JsonProperty("FreightForwarderPartyIATACode")
-    private String freightForwarderPartyIATACode;
+    private String freightForwarderPartyIataCode;
 
     @JsonProperty("FreightForwarderPartyAccountNo")
     private String freightForwarderPartyAccountNo;
@@ -154,22 +154,22 @@ public class NeOneShipmentData implements Serializable {
     private LocalDate flightDate2;
 
     @JsonProperty("ArrivalLocationID1")
-    private String arrivalLocationID1;
+    private String arrivalLocationId1;
 
     @JsonProperty("CarrierID1")
-    private String carrierID1;
+    private String carrierId1;
 
     @JsonProperty("ArrivalLocationID2")
-    private String arrivalLocationID2;
+    private String arrivalLocationId2;
 
     @JsonProperty("CarrierID2")
-    private String carrierID2;
+    private String carrierId2;
 
     @JsonProperty("ArrivalLocationID3")
-    private String arrivalLocationID3;
+    private String arrivalLocationId3;
 
     @JsonProperty("CarrierID3")
-    private String carrierID3;
+    private String carrierId3;
 
     @JsonProperty("SpecialServiceRequest")
     private String specialServiceRequest;
@@ -249,4 +249,11 @@ public class NeOneShipmentData implements Serializable {
     @TableField(fill = FieldFill.UPDATE)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
+
+    private String checkResult;
+
+    private String checkStatus;
+
+    private String aiCheckStatus;
+
 }

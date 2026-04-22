@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,8 +29,8 @@ public class LogisticsEventFSU {
     @JsonProperty("cargo:eventCode")
     private CodeListElement eventCode;
 
-    @JsonProperty("cargo:exceptionHandlingCode")
-    private CodeListElement exceptionHandlingCode;
+    @JsonProperty("cargo:exceptionHandlingCodes")
+    private List<ExceptionHandlingCode> exceptionHandlingCodes;
 
     @JsonProperty("cargo:eventFor")
     private LogisticsObject eventFor;
@@ -59,6 +60,20 @@ public class LogisticsEventFSU {
     public static class CodeListElement {
         @JsonProperty("@type")
         private String type = "cargo:CodeListElement";
+
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
+        @JsonProperty("cargo:code")
+        private String code;
+
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
+        @JsonProperty("cargo:codeDescription")
+        private String codeDescription;
+    }
+
+    @Data
+    public static class ExceptionHandlingCode{
+        @JsonProperty("@type")
+        private String type = "cargo:EHC";
 
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
         @JsonProperty("cargo:Code")

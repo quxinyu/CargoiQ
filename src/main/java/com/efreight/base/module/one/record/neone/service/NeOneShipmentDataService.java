@@ -7,6 +7,8 @@ import com.efreight.base.module.one.record.neone.model.entity.NeOneShipmentData;
 import com.efreight.base.module.one.record.neone.model.request.NeOneShipmentDataRequest;
 import com.efreight.base.module.one.record.neone.model.request.NeOneShipmentSendRequest;
 
+import java.util.List;
+
 public interface NeOneShipmentDataService extends IService<NeOneShipmentData> {
 
     IPage<?> pageList(NeOneShipmentDataRequest req);
@@ -17,4 +19,9 @@ public interface NeOneShipmentDataService extends IService<NeOneShipmentData> {
 
     void getObjectFromOneRecord(String oneRecordBody);
 
+    Result<?> check(List<NeOneShipmentSendRequest> request);
+
+    Result<?> autoCheck(NeOneShipmentSendRequest request);
+
+    Result<?> queryCheck(String id);
 }

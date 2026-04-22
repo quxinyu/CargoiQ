@@ -12,4 +12,6 @@ public class NeOneShipmentSendRequest {
     private String checkCode;
 
     private String checkDescription;
+
+    private String checkResult;
 }

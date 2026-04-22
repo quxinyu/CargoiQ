@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -57,6 +58,24 @@ public class NeOneShipmentDataController {
     @PostMapping("/send-check")
     public Result<?> sendCheck(@RequestBody NeOneShipmentSendRequest request) {
         return Result.ok(this.neOneShipmentDataService.sendCheck(request));
+    }
+
+    @ApiOperation(value = "手动核验", notes = "手动核验")
+    @PostMapping("/check")
+    public Result<?> check(@RequestBody List<NeOneShipmentSendRequest> request) {
+        return this.neOneShipmentDataService.check(request);
+    }
+
+    @ApiOperation(value = "自动核验", notes = "自动核验")
+    @PostMapping("/auto-check")
+    public Result<?> autoCheck(@RequestBody NeOneShipmentSendRequest request) {
+        return this.neOneShipmentDataService.autoCheck(request);
+    }
+
+    @ApiOperation(value = "查询核验结果", notes = "查询核验结果")
+    @GetMapping("/query-check")
+    public Result<?> queryCheck(@RequestParam String id) {
+        return this.neOneShipmentDataService.queryCheck(id);
     }
 
 

@@ -1,13 +1,15 @@
 package com.efreight.base.module.one.record.neone.service.impl;
 
 import cn.gov.caac.issp.utility.CaacParseTransfer;
-import cn.hutool.json.JSONUtil;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.efreight.base.common.core.exception.EftException;
 import com.efreight.base.common.core.model.Result;
 import com.efreight.base.module.one.record.neone.enums.FromType;
 import com.efreight.base.module.one.record.neone.helper.IriGenerator;
@@ -24,13 +26,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -63,11 +65,16 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
             log.error("=====================================> OneRecord数据转换出现问题");
             throw new RuntimeException(e);
         }
+        map.put("MsgType", "FWB");
         String OneR = CaacParseTransfer.transfer(map, responseType);
 
         String uuid = UUIDTools.generateSimpleUUID();
         String iri = iriGenerator.generateLogisticsObjectLoId(uuid);
         logisticsObjectsService.createResolveBody(iri, OneR, FromType.CREATE_SELF);
+
+        byId.setLoId(iri);
+        updateById(byId);
+
         return Result.ok(iri);
     }
 
@@ -76,12 +83,13 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
         String id = request.getId();
         NeOneShipmentData byId = getById(id);
 
-        //LE的id
-        String uuid = UUIDTools.generateSimpleUUID();
-        String iri = this.iriGenerator.generateLogisticsEventLoId(byId.getLoId(), uuid);
-        String logisticsEvent = generateLogisticsEvent(byId, request, iri);
-        logisticsObjectsEventService.create(byId.getLoId(), uuid, iri, logisticsEvent);
-
+        String checkStatus = byId.getCheckStatus();
+        String aiCheckStatus = byId.getAiCheckStatus();
+        if("1".equals(checkStatus) && "1".equals(aiCheckStatus)){
+            sendOneRecord(new ArrayList<>(), byId, "RCS");
+        } else {
+            return Result.fail("请先完成数据审核");
+        }
         return Result.ok();
     }
 
@@ -101,7 +109,80 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
         save(shipmentData);
     }
 
-    private String generateLogisticsEvent(NeOneShipmentData shipmentData, NeOneShipmentSendRequest request, String iri){
+    @Override
+    public Result<?> check(List<NeOneShipmentSendRequest> request) {
+        NeOneShipmentSendRequest neOneShipmentSendRequest = request.get(0);
+        String id = neOneShipmentSendRequest.getId();
+        NeOneShipmentData byId = getById(id);
+        //如果成功则更新状态
+        if("1".equals(neOneShipmentSendRequest.getCheckResult())){
+            byId.setCheckStatus("1");
+            updateById(byId);
+            return Result.ok();
+        }
+        //失败则更新状态并写入原因
+        String checkResult = byId.getCheckResult();
+        JSONArray jsonArray = (checkResult != null && !checkResult.isEmpty())
+                ? JSON.parseArray(checkResult)
+                : new JSONArray();
+        request.forEach(item -> {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("checkCode", item.getCheckCode());
+            jsonObject.put("checkDescription", item.getCheckDescription());
+            jsonArray.add(jsonObject);
+        });
+        String checkResult2 = JSON.toJSONString(jsonArray);
+        byId.setCheckResult(checkResult2);
+        byId.setCheckStatus("0");
+        updateById(byId);
+
+        sendOneRecord(request, byId, "SAC");
+
+        return Result.ok();
+    }
+
+    private void sendOneRecord(List<NeOneShipmentSendRequest> request, NeOneShipmentData byId, String type) {
+        String uuid = UUIDTools.generateSimpleUUID();
+        String loId = byId.getLoId();
+        String id = loId.substring(loId.lastIndexOf("/") + 1);
+        String iri = this.iriGenerator.generateLogisticsEventLoId(id, uuid);
+        String logisticsEvent = generateLogisticsEvent(byId, request, iri, type);
+        logisticsObjectsEventService.create(id, uuid, iri, logisticsEvent);
+    }
+
+    @Override
+    public Result<?> autoCheck(NeOneShipmentSendRequest request) {
+        String id = request.getId();
+        NeOneShipmentData byId = getById(id);
+        //如果成功则更新状态
+        if("1".equals(request.getCheckResult())){
+            byId.setAiCheckStatus("1");
+            return Result.ok();
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("checkCode", request.getCheckCode());
+        jsonObject.put("checkDescription", request.getCheckDescription());
+        String checkResult = byId.getCheckResult();
+        JSONArray jsonArray = (checkResult != null && !checkResult.isEmpty())
+                ? JSON.parseArray(checkResult)
+                : new JSONArray();
+        jsonArray.add(jsonObject);
+        String s = JSON.toJSONString(jsonArray);
+        byId.setCheckResult(s);
+        byId.setAiCheckStatus("0");
+        updateById(byId);
+        sendOneRecord(Collections.singletonList(request), byId, "SAC");
+        return Result.ok();
+    }
+
+    @Override
+    public Result<?> queryCheck(String id) {
+        NeOneShipmentData byId = getById(id);
+        return Result.ok(byId.getCheckResult());
+    }
+
+    private String generateLogisticsEvent(NeOneShipmentData shipmentData,
+                                          List<NeOneShipmentSendRequest> request, String iri, String type){
         String timeStr = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
         String mawbCode = shipmentData.getMawbCode();
@@ -114,14 +195,20 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
         event.setCreationDate(timeStr);
 
         LogisticsEventFSU.CodeListElement eventCode = new LogisticsEventFSU.CodeListElement();
-        eventCode.setCode("SAC");
+        eventCode.setCode(type);
         eventCode.setCodeDescription("FSU Status Codes");
         event.setEventCode(eventCode);
 
-        LogisticsEventFSU.CodeListElement exceptionHandlingCode = new LogisticsEventFSU.CodeListElement();
-        exceptionHandlingCode.setCode(request.getCheckCode());
-        exceptionHandlingCode.setCodeDescription(request.getCheckDescription());
-        event.setExceptionHandlingCode(exceptionHandlingCode);
+        if("SAC".equals( type)){
+            List<LogisticsEventFSU.ExceptionHandlingCode> exceptionHandlingCodes = new ArrayList<>();
+            request.forEach(item -> {
+                LogisticsEventFSU.ExceptionHandlingCode code = new LogisticsEventFSU.ExceptionHandlingCode();
+                code.setCode(item.getCheckCode());
+                code.setCodeDescription(item.getCheckDescription());
+                exceptionHandlingCodes.add(code);
+            });
+            event.setExceptionHandlingCodes(exceptionHandlingCodes);
+        }
 
         LogisticsEventFSU.LogisticsObject logisticsObject = new LogisticsEventFSU.LogisticsObject();
         logisticsObject.setId(shipmentData.getLoId());

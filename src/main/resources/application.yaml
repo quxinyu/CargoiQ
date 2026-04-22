@@ -1,7 +1,5 @@
 server:
   port: ${SERVER_PORT:6041}
-  servlet:
-    context-path: ${SERVER_CONTEXT_PATH:/cargoid}
 
 spring:
   application:

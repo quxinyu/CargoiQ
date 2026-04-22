@@ -31,7 +31,7 @@ public class CargoIdApplication {
         Environment env = ctx.getEnvironment();
         String ip = NetUtil.getLocalhost().getHostAddress();
         String port = env.getProperty("server.port");
-        String path = env.getProperty("server.servlet.context-path");
+        String path = env.getProperty("server.servlet.context-path", "");
         String applicationName = env.getProperty("spring.application.name");
         log.info("\n----------------------------------------------------------\n\t" +
                 "Application " + applicationName + " is running! Access URLs:\n\t" +

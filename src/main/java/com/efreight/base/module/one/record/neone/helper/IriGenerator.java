@@ -25,7 +25,7 @@ public class IriGenerator {
     @Autowired
     private NeOneConfigProperties neOneConfigProperties;
 
-    @Value("${server.servlet.context-path}")
+    @Value("${server.servlet.context-path:}")
     private String contextPath;
     // LO对象的访问前缀
     private final static String LOGISTICS_OBJECTS_PREFIX = "/logistics-objects";

@@ -33,6 +33,9 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/",
                         "/index.html",
+                        "/cargoid",
+                        "/cargoid/",
+                        "/cargoid/**",
                         "/favicon.ico",
                         "/authapi/token",
                         "/token",
@@ -58,22 +61,40 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/favicon.ico")
                 .addResourceLocations("classpath:/static/favicon.ico");
+        registry.addResourceHandler("/cargoid/favicon.ico")
+                .addResourceLocations("classpath:/static/favicon.ico");
+        registry.addResourceHandler("/cargoid/index.html")
+                .addResourceLocations("classpath:/static/index.html");
         registry.addResourceHandler("/css/**")
+                .addResourceLocations("classpath:/static/css/");
+        registry.addResourceHandler("/cargoid/css/**")
                 .addResourceLocations("classpath:/static/css/");
         registry.addResourceHandler("/js/**")
                 .addResourceLocations("classpath:/static/js/");
+        registry.addResourceHandler("/cargoid/js/**")
+                .addResourceLocations("classpath:/static/js/");
         registry.addResourceHandler("/img/**")
+                .addResourceLocations("classpath:/static/img/");
+        registry.addResourceHandler("/cargoid/img/**")
                 .addResourceLocations("classpath:/static/img/");
         registry.addResourceHandler("/fonts/**")
                 .addResourceLocations("classpath:/static/fonts/");
+        registry.addResourceHandler("/cargoid/fonts/**")
+                .addResourceLocations("classpath:/static/fonts/");
         registry.addResourceHandler("/print/**")
+                .addResourceLocations("classpath:/static/print/");
+        registry.addResourceHandler("/cargoid/print/**")
                 .addResourceLocations("classpath:/static/print/");
     }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         // SPA history 路由兜底到 index.html，支持直接刷新前端页面
-        registry.addViewController("/").setViewName("forward:/index.html");
+        registry.addViewController("/").setViewName("redirect:/cargoid/");
+        registry.addViewController("/cargoid").setViewName("redirect:/cargoid/");
+        registry.addViewController("/cargoid/").setViewName("forward:/index.html");
+        registry.addViewController("/cargoid/{path:[^\\.]*}").setViewName("forward:/index.html");
+        registry.addViewController("/cargoid/**/{path:[^\\.]*}").setViewName("forward:/index.html");
         registry.addViewController("/{path:[^\\.]*}").setViewName("forward:/index.html");
         registry.addViewController("/**/{path:[^\\.]*}").setViewName("forward:/index.html");
     }

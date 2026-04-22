@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -28,13 +30,52 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(handlerInterceptor())
                 .addPathPatterns("/**")
                 // 放行获取token的路径
-                .excludePathPatterns("/authapi/token", "/token");
+                .excludePathPatterns(
+                        "/",
+                        "/index.html",
+                        "/favicon.ico",
+                        "/authapi/token",
+                        "/token",
+                        "/css/**",
+                        "/js/**",
+                        "/img/**",
+                        "/fonts/**",
+                        "/print/**",
+                        "/swagger-ui/**",
+                        "/webjars/**",
+                        "/v2/api-docs",
+                        "/error"
+                );
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         // 参数别名处理器
         resolvers.add(new HandlerMethodArgumentAliasResolver());
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/favicon.ico")
+                .addResourceLocations("classpath:/static/favicon.ico");
+        registry.addResourceHandler("/css/**")
+                .addResourceLocations("classpath:/static/css/");
+        registry.addResourceHandler("/js/**")
+                .addResourceLocations("classpath:/static/js/");
+        registry.addResourceHandler("/img/**")
+                .addResourceLocations("classpath:/static/img/");
+        registry.addResourceHandler("/fonts/**")
+                .addResourceLocations("classpath:/static/fonts/");
+        registry.addResourceHandler("/print/**")
+                .addResourceLocations("classpath:/static/print/");
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        // SPA history 路由兜底到 index.html，支持直接刷新前端页面
+        registry.addViewController("/").setViewName("forward:/index.html");
+        registry.addViewController("/{path:[^\\.]*}").setViewName("forward:/index.html");
+        registry.addViewController("/**/{path:[^\\.]*}").setViewName("forward:/index.html");
     }
 
     @Bean

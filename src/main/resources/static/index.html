@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="efreight" />
+    <meta name="keywords" content="efreight" />
+    <title>eFreight 航空数字化系统</title>
+    <script type="module" crossorigin src="./js/index.I766EkZl.js"></script>
+    <link rel="modulepreload" crossorigin href="./js/vendor.BtS0XhBm.js">
+    <link rel="modulepreload" crossorigin href="./js/api.CnIo2U6h.js">
+    <link rel="modulepreload" crossorigin href="./js/stores.BZWhKEVQ.js">
+    <link rel="modulepreload" crossorigin href="./js/common.DHoPQd0e.js">
+    <link rel="stylesheet" crossorigin href="./css/style.DHGLe2_5.css">
+  </head>
+
+  <body>
+    <div id="app">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="circular loader"
+        viewBox="0 0 20 20"
+      >
+        <g class="loading-path" stroke-width="0">
+          <circle r="3.375" class="dot1 dot" rx="0" ry="0" />
+          <circle r="3.375" class="dot2 dot" rx="0" ry="0" />
+          <circle r="3.375" class="dot4 dot" rx="0" ry="0" />
+          <circle r="3.375" class="dot3 dot" rx="0" ry="0" />
+        </g>
+      </svg>
+    </div>
+  </body>
+  <script>
+    const themeColor = localStorage.getItem('themeColor');
+    if (themeColor) {
+      const allDot = document.querySelectorAll('.dot');
+      const arrDot = Array.from(allDot);
+      if (arrDot.length > 0) {
+        for (let i = 0; i < arrDot.length; i++) {
+          arrDot[i].style.fill = themeColor || '#464d7e';
+        }
+      }
+    }
+  </script>
+  <style>
+    html,
+    body,
+    #app {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .el-popup-parent--hidden {
+      width: 100% !important;
+    }
+
+    .loader {
+      width: 50px;
+      height: 50px;
+    }
+  </style>
+</html>

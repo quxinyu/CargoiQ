@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Web Reporter Designer</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	
+	<body>
+		<script>
+			function getCookie(cname) {
+				var name = cname + "=";
+				var ca = document.cookie.split(';');
+				for (var i = 0; i < ca.length; i++) {
+					var c = ca[i].trim();
+					if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+				}
+				return "";
+			}
+			window.config={
+				// urlPrefix: "http://localhost:8080",
+				storageType: 'simple',
+				dataSourceEditable: true,
+				enableTemplateManager: true,
+				enableShareScriptManager: true,
+				customerName: 'test2',
+				customerSig: 'e379ecb076',
+				leftPanelTabOrder: 'TemplateManager,DataSourceManager,Outline,ShareScriptManager',
+				autoBindRowDataSource: true,
+				ignoreTemplateDataSource: true,
+				headers: function() {
+					let token = getCookie('token');
+					return {
+						Authorization: 'Bearer ' + token
+					}
+				},
+				requestIntercept: function(requestOptions) {
+					console.log(requestOptions);
+				},
+				dataSourceTemplatePreprocessor: function(content) {
+					content=content.trim();
+					if (content.toLowerCase().indexOf('select')==0) {
+						let newContent = '/// type=sql\n' + JSON.stringify({
+							sql: content,
+							driver: "com.mysql.jdbc.Driver",
+							jdbcUrl: "jdbc:mysql://localhost:3306/jun",
+							user: "root",
+							password: "123456",
+						});
+						return newContent;
+					}
+					return content;
+				},
+				dataSourceTemplateParser: {
+					accept: function(content) {
+						if(content.indexOf('/// type=ckey')==0) {
+							return true;
+						}
+						return false;
+					},
+					parse: function(content) {
+						var model=eval('var model; model=' + content);
+						var ckey=model.ckey;
+						// process via ajax ... jQuery is window.jq
+
+						return {
+							expression: '='+ckey,
+							children: [
+								{name: 'field1', expression: 'expression of field1'},
+								{name: 'field2', expression: 'expression of field2'}
+							]
+						}
+					}
+				},
+				dataSourceFieldMetasProvider: function(obj) {
+					return {
+						dsCode: obj.code
+					}
+				},
+				refreshLinkedDataSourceList: function(templateData) {
+					function unescapeXml(xml) {
+						return xml.replace(/&lt;/g, '<')
+							.replace(/&gt;/g, '>')
+							.replace(/&amp;/g, '&')
+							.replace(/&quot;/g, '"')
+							.replace(/&apos;/g, '\'')
+							.replace(/&#32;/g, ' ');
+					}
+					let decoded=unescapeXml(templateData);
+					let regexp=/\<bind\>(.*)\<\/bind\>/g;
+					let matches=[...decoded.matchAll(regexp)];
+					let dataSourceList=[];
+					for(let matchGroups of matches) {
+						try {
+							let bind=matchGroups[1];
+							let split=bind.indexOf('///');
+							if (split>=0) {
+								let comment=bind.substring(split+3);
+								let metas=JSON.parse(comment);
+								let dsCode=metas.dsCode;
+								if (dsCode) {
+									if(!dataSourceList.find((e)=> e.name==dsCode)) {
+										dataSourceList.push({
+											id: dsCode,
+											name: dsCode,
+										});
+									}
+								}
+							}
+						} catch (e) {
+							console.log(e);
+						}
+					}
+					return dataSourceList;
+				},
+				defaultFontSize: '10.5', // 14px
+			}
+		</script>
+		<script src='designer-entry.js'>
+		</script>
+
+		<script>
+			xmreport.outlineApi.addTemplateChangeListener((root)=> {
+				let pageNodes = root.getChildren(); // pages
+				console.log(pageNodes);
+			});
+
+			console.log(xmreport.outlineApi.getRoot());
+		</script>
+	</body>
+</html>

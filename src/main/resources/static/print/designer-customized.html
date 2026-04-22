@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Web Reporter Designer</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	
+	<body>
+		<script>
+			function getCookie(cname) {
+				var name = cname + "=";
+				var ca = document.cookie.split(';');
+				for (var i = 0; i < ca.length; i++) {
+					var c = ca[i].trim();
+					if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+				}
+				return "";
+			}
+			window.config={
+				// urlPrefix: "http://localhost:8080", // 设计器后端API URL前缀
+				
+				storageType: 'simple', // 模板存储类型，只能选simple
+				scriptStorageType: 'simple', // 公共脚本存储类型，只能选simple
+
+				enableTemplateManager: false, // 左边栏是否启用模板管理器
+				enableShareScriptManager: false, // 左边栏是否启用公共脚本管理器
+				
+				showDataSourceTemplateTree: false, // 是否显示数据源模板目录树
+				dataSourceEditable: false, // 数据源模板是否可编辑
+				autoBindRowDataSource: true, // 给单元格绑定数据源字段时，是否自动给行绑定父字段数据源
+				defaultDataSourceTemplateSelectionHeight: '200px', // 数据源模板管理器默认高度
+				
+				customerName: 'test2',
+				customerSig: 'e379ecb076',
+
+				showLeftPanelDefault: false, // 隐藏左侧栏
+				leftPanelTabOrder: 'Outline,TemplateManager,DataSourceManager,ShareScriptManager', // 左边栏选项卡顺序
+				enableTitleBar: false, // 是否显示标题栏
+				saveButtonEnabled: false, // 是否显示保存按钮
+				previewButtonEnabled: false, // 是否显示预览按钮
+
+				// 请求后端API时HTTP请求添加自定义Header
+				headers: function() {
+					let token = getCookie('token');
+					return {
+						Authorization: 'Bearer ' + token
+					}
+				},
+
+				// HTTP请求拦截回调，可以在这里修改requestOptions中的参数
+				requestIntercept: function(requestOptions) {
+					console.log(requestOptions);
+				},
+
+				// 控件默认启用相对位置
+				defaultComponentFloating: true,
+
+				// 默认页面设置
+				defaultPagePadding: {left: 154, right: 154, top: 154, bottom: 154},
+				defaultHeaderHeight: 70,
+				defaultFooterHeight: 70,
+				
+				// 默认字体设置
+				defaultCjkFont: '黑体',
+				defaultWesternFont: '黑体',
+				defaultFontSize: '8', // 8pt
+
+				// 字体列表
+				// fonts: ['宋体', '黑体', 'Times New Roman'],
+				// addOnFonts: ['微软雅黑'], // 添加额外的字体列表
+
+				// 默认段落设置
+				defaultLineHeight: 1.5,
+				defaultTextIndent: 2,
+				defaultTextIndentUnit: 'char',
+
+				// 控件默认边距设置
+				defaultPadding: {left: 0, right: 0, top: 0, bottom: 0},
+
+				// 条码默认设置
+				defaultBarcodeType: 'EAN128',
+				defaultBarcodeCjkFont: '黑体',
+				defaultBarcodeWesternFont: '黑体',
+				defaultBarcodeFontSize: '8pt',
+
+				// 表格控制默认边框样式				
+				defaultGridBorder: 'none',
+
+				// 使用上次编辑过的字体样式作为默认字体样式
+				memorizeSelectedFontStyles: true,
+
+				// 点击预览按钮时是否显示编辑框
+				showPreviewDataEditor: false,
+
+				// 点击预览按钮时使用自定义操作
+				customizedPreviewButtonClicked: function(that) {
+					// TODO: show content or something?
+					// that.previewButton.getHtmlElement(); 
+					// show something below preview button element?
+
+					// invoke preview function
+					that.preview(
+						{}, // preview data
+						{format: 'PDF', dividePage: true}, // preview options
+					); // invoke the preview options
+				},
+
+				// 默认的预览数据
+				defaultPreviewData: function() {
+					return JSON.stringify({a: 'test'}, null, 4);
+				},
+				
+				// 自定义系统数据源
+				systemDataSourceTemplate: function() {
+					let systemFieldsInfo=[
+						{name: '页码/总页数', expression: "=getPageNo() + '/' + getTotalPages(); "},
+						{name: '页码/总页数 (全局)', expression: "=getGlobalPageNo() + '/' + getGlobalTotalPages(); "},
+						{name: '当前日期', expression: "//javascript\n var date=new Date(); date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate()"},
+						{name: '当前时间', expression: "//javascript\n var date=new Date(); date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()"},
+
+						{name: '单元格合计', expression: "//javascript\n =sum('这里请替换成起始单元格名称', '这里请替换成结束单元格名称')"},
+						{name: '本页单元格合计', expression: "//javascript\n =psum('这里请替换成起始单元格名称', '这里请替换成结束单元格名称')"},
+
+						{name: 'EAN128条码', expression: `//javascript
+var processDate=function(productionDate) {
+	return replace(productionDate + '', '-', '').substring(2);
+}
+
+var code='';
+
+// 开始，下方行请根据需要进行删减和调整
+code += '01' + lookup('主条码');
+code += '11' + processDate(lookup('生产日期'));
+code += '17' + processDate(lookup('失效日期'));
+code += '10' + lookup('批号') + '\\u001d';
+code += '21' + lookup('序列号') + '\\u001d';
+// 结束
+
+if(code.endsWith('\\u001d')) {
+	code=code.substring(0, code.length-1);
+}
+code;
+`},
+					];
+					return systemFieldsInfo;
+				},
+
+				clickIntoPageContainers: true, // 使用单击进入页眉页脚和页内容容器编辑模式（默认是双击进入容器编辑）
+				canvasVerticalScrollBarAutoHide: false, // 自动隐藏画布垂直滚动条
+				canvasHorizontalScrollBarAutoHide: false, // 自动隐藏画布水平滚动条
+				canvasScrollBarType: 'INNER', // 画布滚动条位置
+			};
+		</script>
+		<script src='designer-entry.js'>
+		</script>
+
+		<script>
+			// 模板打开回调函数
+			let templateApi = window.xmreport.templateApi;
+			templateApi.addTemplateOpenListener((template)=> {
+				let groupPath;
+				let path=template.path;
+				let lastSlashIndex=path.indexOf('/');
+				if(lastSlashIndex>=0) {
+					groupPath=path.substring(0, lastSlashIndex);
+				}
+				if(groupPath) {
+					xmreport.dataSourceApi.filterByPath(groupPath);
+					// xmreport.dataSourceApi..filterById(dataSourceTemplateId);
+				}
+			});
+
+			// 保存模板
+			// templateApi.save();
+
+			// 预览
+			// templateApi.preview(previewData: "JSON" | object, previewOption: {dividePage: boolean, docType: string});
+			// templateApi.preview("{a: 'test'}", {dividePage: true, docType: 'PDF'});
+
+			// 导出当前编辑的模板
+			// templateApi.exportEditing();
+
+			// 序列化当前编辑模板到字符串
+			// let templateContent = templateApi.serializeEditing();
+
+			// 根据ID打开模板
+			// templateApi.openById('templateId')
+
+			// expose function to global
+			let outlineApi=window.xmreport.outlineApi;
+
+			// event listeners
+			outlineApi.addTemplateChangeListener((root)=> {
+				let pageNodes = root.getChildren(); // pages
+				console.log(pageNodes); // 名称为 pageNodes[i].comp.name 
+			});
+
+			// 获取 root
+			// outlineApi.getRoot();
+
+			// 创建一个新的空白页
+			outlineApi.newPage();
+
+			// 复制名为pageId的页
+			// outlineApi.copyPage(pageId: string);
+			// outlineApi.copyPage("page1");
+
+			// 在当前pageId的页前粘贴所复制的页
+			// outlineApi.pastePage(pageId: string)
+			// outlineApi.pastePage("page1")
+
+			// 删除名为pageId的页
+			// outlineApi.deletePage(pageId: string);
+			// outlineApi.deletePage("page1");
+
+			// 将名为pageId的页顺序上移
+			// outlineApi.moveUpPage(pageId: string);
+
+			// 将名为pageId的页顺序下移
+			// outlineApi.moveDownPage(pageId: string);
+
+			let languageApi=window.xmreport.languageApi;
+			// 设置语言
+			languageApi.setLanguage('en');
+			
+			// 监听语言变化
+			languageApi.addLanguageChangedListener((language)=> {
+				console.log(language);
+			});
+			
+		</script>
+	</body>
+</html>

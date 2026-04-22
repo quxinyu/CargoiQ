@@ -26,7 +26,7 @@ public class AuthInnerRequest extends BaseParam implements Serializable {
      */
     private Integer id;
 
-    @NotBlank(message = "企业名称不能为空")
+//    @NotBlank(message = "企业名称不能为空")
     @JsonProperty("orgName")
     private String orgName;
 

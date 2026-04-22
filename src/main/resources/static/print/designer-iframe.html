@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Web Reporter Designer with Customized Left Panel</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	
+	<body>
+		<style>
+			html {
+				width: 100%;
+				height: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+			body {
+				width: 100%;
+				height: 100%;
+				padding: 0px;
+				margin: 0px;
+				overflow: hidden;
+				display: flex;
+				align-items: stretch;
+			}
+			.left-panel {
+				width: 300px;
+				flex: 0 0 auto;
+			}
+			.designer {
+				flex: 1 1 auto;
+			}
+		</style>
+		<div class="left-panel">
+			<button id="openTemplateBtn">打开模板</button>
+			<button id="bindSelectedBtn">给选中的组件绑定值</button>
+			<button id="setDraggingBindBtn">拖动字段到组件上</button>
+		</div>
+		<iframe id="designer-iframe" src="./designer.html?showLeftPanelDefault=false&enableTemplateManager=false&enableShareScriptManager=false&enableDataSourceTemplateManager=false" class="designer"></iframe>
+
+		<script>
+			let designerIframe=document.getElementById('designer-iframe');
+			designerIframe.onload=()=> {
+
+				let openTemplateBtn=document.getElementById('openTemplateBtn');
+				openTemplateBtn.addEventListener('click', (e)=> {
+					designerIframe.contentWindow.xmreport.templateApi.openById('xxx');
+				});
+
+				let bindSelectedBtn=document.getElementById('bindSelectedBtn');
+				bindSelectedBtn.addEventListener('click', (e)=> {
+					designerIframe.contentWindow.xmreport.dataSourceApi.bind('=expression /// {"alias":"别名"}');
+				});
+				
+				let draggingBind=false;
+				let draggingTips=document.createElement('div');
+				draggingTips.style.display='inline-block';
+				draggingTips.style.position='absolute';
+				draggingTips.style.background='rgba(0, 0, 0, 0.2)';
+	
+				let setDraggingBindBtn=document.getElementById('setDraggingBindBtn');
+				setDraggingBindBtn.addEventListener('mousedown', (e)=> {
+					designerIframe.contentWindow.xmreport.dataSourceApi.setDraggingBind('=expression /// {"alias":"表达式别名"}');
+					draggingTips.innerText='表达式别名';
+					draggingTips.style.left=e.clientX + 'px';
+					draggingTips.style.top=e.clientY + 'px';
+					document.body.appendChild(draggingTips);
+					
+					draggingBind=true;
+					designerIframe.style.pointerEvents='none';
+				});
+	
+				document.body.addEventListener('mousemove', (e)=> {
+					if(draggingBind) {
+						draggingTips.style.left=e.clientX + 'px';
+						draggingTips.style.top=e.clientY + 'px';
+						
+						if(e.clientX>designerIframe.offsetLeft && e.clientY>=designerIframe.offsetTop) {
+							designerIframe.contentWindow.postMessage({
+								type: 'mousemove',
+								data: {
+									clientX: e.clientX-designerIframe.offsetLeft,
+									clientY: e.clientY-designerIframe.offsetTop,
+									ctrlKey: e.ctrlKey || e.metaKey,
+									shiftKey: e.shiftKey,
+									altKey: e.altKey,
+									button: e.button,
+								}
+							});
+						}
+					}
+				}, true);
+	
+				document.body.addEventListener('mouseup', (e)=> {
+					if(draggingBind) {
+						designerIframe.contentWindow.postMessage({
+							type: 'mouseup',
+							data: {
+								clientX: e.clientX-designerIframe.offsetLeft,
+								clientY: e.clientY-designerIframe.offsetTop,
+								ctrlKey: e.ctrlKey || e.metaKey,
+								shiftKey: e.shiftKey,
+								altKey: e.altKey,
+								button: e.button,
+							}
+						});
+					}
+					
+					draggingBind=false;
+					draggingTips.remove();
+					designerIframe.style.pointerEvents='auto';
+				}, true);
+			}
+		</script>
+	</body>
+</html>

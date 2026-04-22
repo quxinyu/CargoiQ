@@ -1,8 +1,6 @@
 package com.efreight.base.module.one.record.neone.listener;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.efreight.base.api.feign.IStudioApiService;
-import com.efreight.base.api.vo.NeoneNotifyEbaseVO;
 import com.efreight.base.common.core.exception.OneRecordServerException;
 import com.efreight.base.common.core.utils.SpringUtils;
 import com.efreight.base.module.one.record.neone.model.entity.NeOneLogisticsObjects;
@@ -47,8 +45,6 @@ import java.util.stream.Collectors;
 public class LogisticsObjectsListener {
 
     private final OneRecordResolvedLogisticsObjectService resolvedDataService;
-
-    private final IStudioApiService iStudioApiService;
 
     private String loCreateNotifyTemplate;
 
@@ -110,35 +106,26 @@ public class LogisticsObjectsListener {
 
         long startTime = System.currentTimeMillis();
 
-        // 分离订阅者：有 ebaseFlowId 的和无 ebaseFlowId 的
-        List<NeOneSubscriptions> ebaseSubscriptions = subscriptions.stream()
-                .filter(bean -> ObjectUtils.isNotEmpty(bean.getEbaseFlowId()))
-                .collect(Collectors.toList());
-
         List<NeOneSubscriptions> externalSubscriptions = subscriptions.stream()
                 .filter(bean -> ObjectUtils.isEmpty(bean.getEbaseFlowId()))
                 .collect(Collectors.toList());
 
-        // 统一异步通知所有订阅者（ebase + 外部）
         String loIri = base.getIri();
         String contextType = base.getContextType();
-        List<UnifiedNotifyResult> results = notifyAllSubscribersAsync(ebaseSubscriptions, externalSubscriptions, base, loIri, contextType);
+        List<UnifiedNotifyResult> results = notifyAllSubscribersAsync(externalSubscriptions, base, loIri, contextType);
 
         // 统计结果
         long totalSuccessCount = results.stream().filter(UnifiedNotifyResult::isSuccess).count();
         long totalFailCount = results.size() - totalSuccessCount;
-        long ebaseSuccessCount = results.stream()
-                .filter(r -> r.isEbase() && r.isSuccess())
-                .count();
         long externalSuccessCount = results.stream()
                 .filter(r -> !r.isEbase() && r.isSuccess())
                 .count();
 
         long duration = System.currentTimeMillis() - startTime;
 
-        log.info(">>>>>>>>>>>>>>>>>>>>物流对象通知完成, loId:{}, 总订阅数:{}, ebase订阅数:{}, 外部订阅数:{}, 成功:{}, 失败:{}, ebase订阅成功数:{}, 外部订阅成功数:{}, 耗时:{}ms",
-                base.getLoId(), subscriptions.size(), ebaseSubscriptions.size(), externalSubscriptions.size(),
-                totalSuccessCount, totalFailCount, ebaseSuccessCount, externalSuccessCount, duration);
+        log.info(">>>>>>>>>>>>>>>>>>>>物流对象通知完成, loId:{}, 总订阅数:{}, 外部订阅数:{}, 成功:{}, 失败:{}, 外部订阅成功数:{}, 耗时:{}ms",
+                base.getLoId(), subscriptions.size(), externalSubscriptions.size(),
+                totalSuccessCount, totalFailCount, externalSuccessCount, duration);
 
         // 记录失败的订阅者
         List<UnifiedNotifyResult> failedResults = results.stream()
@@ -148,20 +135,15 @@ public class LogisticsObjectsListener {
         if (!failedResults.isEmpty()) {
             log.error(">>>>>>>>>>>>>>>>>>>>以下订阅者通知失败:");
             for (UnifiedNotifyResult result : failedResults) {
-                if (result.isEbase()) {
-                    log.error("  - [ebase订阅] flowId: {}, 错误: {}", result.getIdentifier(), result.getErrorMsg());
-                } else {
-                    log.error("  - [外部订阅] 公司: {}, URL: {}, 错误: {}",
-                            result.getCompanyName(), result.getNotifyUrl(), result.getErrorMsg());
-                }
+                log.error("  - [外部订阅] 公司: {}, URL: {}, 错误: {}",
+                        result.getCompanyName(), result.getNotifyUrl(), result.getErrorMsg());
             }
         }
     }
 
     /**
-     * 统一异步通知所有订阅者（ebase + 外部）
+     * 统一异步通知外部订阅者
      *
-     * @param ebaseSubscriptions    ebase 订阅者列表
      * @param externalSubscriptions 外部订阅者列表
      * @param lo                    物流对象
      * @param loIri                 物流对象 IRI
@@ -169,26 +151,18 @@ public class LogisticsObjectsListener {
      * @return 统一的通知结果列表
      */
     private List<UnifiedNotifyResult> notifyAllSubscribersAsync(
-            List<NeOneSubscriptions> ebaseSubscriptions,
             List<NeOneSubscriptions> externalSubscriptions,
             NeOneLogisticsObjects lo,
             String loIri,
             String contextType) {
 
         long startTime = System.currentTimeMillis();
-        int totalSubscriptions = ebaseSubscriptions.size() + externalSubscriptions.size();
-        log.info(">>>>>>>>>>>>>>>>>>>>开始异步通知订阅者, loId:{}, 总订阅数:{}, ebase订阅数:{}, 外部订阅数:{}",
-                lo.getLoId(), totalSubscriptions, ebaseSubscriptions.size(), externalSubscriptions.size());
+        int totalSubscriptions = externalSubscriptions.size();
+        log.info(">>>>>>>>>>>>>>>>>>>>开始异步通知订阅者, loId:{}, 外部订阅数:{}",
+                lo.getLoId(), totalSubscriptions);
 
         // 创建异步任务列表
         List<CompletableFuture<UnifiedNotifyResult>> futures = new ArrayList<>();
-
-        // 添加 ebase 订阅者的异步任务
-        for (NeOneSubscriptions sub : ebaseSubscriptions) {
-            CompletableFuture<UnifiedNotifyResult> future = CompletableFuture.supplyAsync(
-                    () -> notifyEbaseSubscriber(lo, sub), notificationExecutor);
-            futures.add(future);
-        }
 
         // 添加外部订阅者的异步任务
         for (NeOneSubscriptions sub : externalSubscriptions) {
@@ -233,32 +207,6 @@ public class LogisticsObjectsListener {
         log.info(">>>>>>>>>>>>>>>>>>>>异步通知耗时: {}ms", duration);
 
         return results;
-    }
-
-    /**
-     * 通知单个 ebase 订阅者
-     *
-     * @param lo  物流对象
-     * @param sub 订阅者
-     * @return 统一通知结果
-     */
-    private UnifiedNotifyResult notifyEbaseSubscriber(NeOneLogisticsObjects lo, NeOneSubscriptions sub) {
-        String flowId = sub.getEbaseFlowId();
-        String loId = lo.getLoId();
-
-        try {
-            log.debug(">>>>>>>>>>>>>>>>>>>>开始通知 ebase 订阅者, flowId:{}, loId:{}", flowId, loId);
-            NeoneNotifyEbaseVO neoneNotifyEbaseVO = new NeoneNotifyEbaseVO();
-            neoneNotifyEbaseVO.setFlowId(flowId);
-            neoneNotifyEbaseVO.setContent(lo.getBodyText());
-            iStudioApiService.neoneNotifyEbase(neoneNotifyEbaseVO);
-            log.info(">>>>>>>>>>>>>>>>>>>>ebase 订阅者通知成功, flowId:{}, loId:{}", flowId, loId);
-            return new UnifiedNotifyResult(true, flowId, null, true, null);
-        } catch (Exception e) {
-            log.error(">>>>>>>>>>>>>>>>>>>>ebase 订阅者通知失败, flowId:{}, loId:{}, 错误信息:{}",
-                    flowId, loId, e.getMessage(), e);
-            return new UnifiedNotifyResult(true, flowId, null, false, e.getMessage());
-        }
     }
 
 
@@ -380,23 +328,21 @@ public class LogisticsObjectsListener {
 
 
     /**
-     * 统一通知结果内部类 - 支持 ebase 订阅和外部订阅
+     * 统一通知结果内部类
      */
     private static class UnifiedNotifyResult {
-        private final boolean isEbase;           // 是否为 ebase 订阅
-        private final String identifier;          // ebase: flowId, 外部: companyId
-        private final String companyName;        // 外部订阅的公司名称（ebase 为 null）
+        private final boolean isEbase;
+        private final String identifier;
+        private final String companyName;
         private final boolean success;            // 是否成功
         private final String errorMsg;            // 错误信息
-        private final String notifyUrl;           // 外部订阅的通知 URL（ebase 为 null）
+        private final String notifyUrl;
 
-        // ebase 订阅构造器
         public UnifiedNotifyResult(boolean isEbase, String identifier, String companyName,
                                    boolean success, String errorMsg) {
             this(isEbase, identifier, companyName, success, errorMsg, null);
         }
 
-        // 外部订阅构造器
         public UnifiedNotifyResult(boolean isEbase, String identifier, String companyName,
                                    boolean success, String errorMsg, String notifyUrl) {
             this.isEbase = isEbase;

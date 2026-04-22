@@ -1,0 +1,10 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.efreight.base.common.core.utils.SpringContextHolder,\
+  com.efreight.base.common.core.filter.TraceIdFilter,\
+  com.efreight.base.common.datasource.config.MyBatisPlusConfig,\
+  com.efreight.base.common.datasource.config.properties.InterceptorProperties,\
+  com.efreight.base.common.datasource.config.properties.CanalProperties,\
+  com.efreight.base.common.mvc.config.MybatisConfiguration,\
+  com.efreight.base.common.async.config.AsyncTaskConfig,\
+  com.efreight.base.common.swagger.config.SwaggerAutoConfiguration,\
+  com.efreight.base.common.swagger.config.SwaggerBeanPostProcessor

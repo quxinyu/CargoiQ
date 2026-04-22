@@ -24,6 +24,19 @@
         <rocketmq.version>2.3.1</rocketmq.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <rdf4j.version>3.7.4</rdf4j.version>
+        <druid.version>1.2.8</druid.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
+        <mybatis-plus-join.version>1.4.6</mybatis-plus-join.version>
+        <swagger.fox.version>3.0.0</swagger.fox.version>
+        <io.swagger.version>1.5.22</io.swagger.version>
+        <fastjson.version>2.0.40</fastjson.version>
+        <hutool.version>5.7.22</hutool.version>
+        <easyexcel.version>3.1.1</easyexcel.version>
+        <sa-token.version>1.35.0.RC</sa-token.version>
+        <kryo-serializers.version>0.45</kryo-serializers.version>
+        <kryo.version>4.0.2</kryo.version>
+        <nacos-api.version>1.4.2</nacos-api.version>
+        <caac-parse-transfer.version>2.0-jdk1.8</caac-parse-transfer.version>
     </properties>
 
     <dependencyManagement>
@@ -63,55 +76,120 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- 数据库 -->
         <dependency>
-            <groupId>com.efreight</groupId>
-            <artifactId>eft-common-datasource</artifactId>
-            <version>${eft.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-bootstrap</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.efreight</groupId>
-            <artifactId>eft-common-mvc</artifactId>
-            <version>${eft.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-bootstrap</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.alibaba.cloud</groupId>
-                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.alibaba.cloud</groupId>
-                    <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.efreight</groupId>
-            <artifactId>eft-common-async</artifactId>
-            <version>${eft.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-bootstrap</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.efreight</groupId>
-            <artifactId>eft-common-swagger</artifactId>
-            <version>${eft.version}</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.yulichang</groupId>
+            <artifactId>mybatis-plus-join</artifactId>
+            <version>${mybatis-plus-join.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.javakaffee</groupId>
+            <artifactId>kryo-serializers</artifactId>
+            <version>${kryo-serializers.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>${kryo.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${swagger.fox.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${io.swagger.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${io.swagger.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>${easyexcel.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-core</artifactId>
+            <version>${sa-token.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <version>${sa-token.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-api</artifactId>
+            <version>${nacos-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>CaacParseTransfer</groupId>
+            <artifactId>CaacParseTransfer</artifactId>
+            <version>${caac-parse-transfer.version}</version>
         </dependency>
 
         <dependency>
@@ -132,6 +210,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>4.4.0</version>
@@ -148,6 +231,33 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>33.3.0-jre</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jodd</groupId>
+            <artifactId>jodd-util</artifactId>
+            <version>6.0.0</version>
         </dependency>
 
 

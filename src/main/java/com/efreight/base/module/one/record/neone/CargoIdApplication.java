@@ -1,12 +1,10 @@
 package com.efreight.base.module.one.record.neone;
 
 import cn.hutool.core.net.NetUtil;
-import com.efreight.base.api.annotation.EnableEftFeignClient;
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -22,8 +20,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
         )
 )
 @EnableScheduling
-@EnableFeignClients
-@EnableEftFeignClient
 @SpringBootApplication(excludeName = {
         "com.efreight.base.common.core.config.NacosPrintConfig"
 })

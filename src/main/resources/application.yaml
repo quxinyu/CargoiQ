@@ -107,7 +107,7 @@ neone:
       token-expire-hours: 2
       refresh-token-expire-hours: 24
       enable-multi-tenant: false
-      enable-auth: true
+      enable-auth: false
       lo-json-format-object-output: true
       allow-request-secret-groups:
         - client_id: PACTL_ONE_API

@@ -1,6 +1,5 @@
 package com.efreight.base.module.one.record.neone.config;
 
-import com.efreight.base.api.feign.IStudioApiService;
 import com.efreight.base.module.one.record.neone.listener.LogisticsEventsListener;
 import com.efreight.base.module.one.record.neone.listener.LogisticsObjectsListener;
 import com.efreight.base.module.one.record.neone.listener.SubscriptionsChangeListener;
@@ -25,12 +24,11 @@ public class EventBusConfiguration {
     @Bean
     public EventBus asyncNeOneEventBus(@Qualifier("notifyExecutor") ThreadPoolTaskExecutor notifyExecutor,
                                        OneRecordResolvedLogisticsObjectService oneRecordResolvedLogisticsObjectService,
-                                       OneRecordResolvedLogisticsEventsService oneRecordResolvedLogisticsEventsService,
-                                       IStudioApiService iStudioApiService) {
+                                       OneRecordResolvedLogisticsEventsService oneRecordResolvedLogisticsEventsService) {
         EventBus neOneEventBus = new AsyncEventBus("NeOneAsyncEventBus", notifyExecutor);
         neOneEventBus.register(subscriptionsChangeListener());
         neOneEventBus.register(logisticsEventsListener());
-        neOneEventBus.register(logisticsObjectsListener(oneRecordResolvedLogisticsObjectService, iStudioApiService));
+        neOneEventBus.register(logisticsObjectsListener(oneRecordResolvedLogisticsObjectService));
         return neOneEventBus;
     }
 
@@ -50,8 +48,7 @@ public class EventBusConfiguration {
     }
 
     @Bean
-    public LogisticsObjectsListener logisticsObjectsListener(OneRecordResolvedLogisticsObjectService oneRecordResolvedLogisticsObjectService,
-                                                             IStudioApiService iStudioApiService) {
-        return new LogisticsObjectsListener(oneRecordResolvedLogisticsObjectService, iStudioApiService);
+    public LogisticsObjectsListener logisticsObjectsListener(OneRecordResolvedLogisticsObjectService oneRecordResolvedLogisticsObjectService) {
+        return new LogisticsObjectsListener(oneRecordResolvedLogisticsObjectService);
     }
 }

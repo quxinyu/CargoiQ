@@ -158,6 +158,7 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
         //如果成功则更新状态
         if("1".equals(request.getCheckResult())){
             byId.setAiCheckStatus("1");
+            updateById(byId);
             return Result.ok();
         }
         JSONObject jsonObject = new JSONObject();

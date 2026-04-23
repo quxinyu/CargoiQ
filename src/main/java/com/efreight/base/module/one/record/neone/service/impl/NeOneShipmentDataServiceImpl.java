@@ -147,7 +147,7 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
         String id = loId.substring(loId.lastIndexOf("/") + 1);
         String iri = this.iriGenerator.generateLogisticsEventLoId(id, uuid);
         String logisticsEvent = generateLogisticsEvent(byId, request, iri, type);
-        logisticsObjectsEventService.create(id, uuid, iri, logisticsEvent);
+        logisticsObjectsEventService.create(id, uuid, iri, logisticsEvent,loId);
     }
 
     @Override

@@ -11,7 +11,7 @@ import com.efreight.base.module.one.record.neone.model.vo.LogisticsEventsRequest
  */
 public interface NeOneLogisticsEventsService extends IService<NeOneLogisticsEvents> {
 
-    void create(String loId, String uuid, String iri, String logisticsEventBody);
+    void create(String loId, String uuid, String iri, String logisticsEventBody, String loIri);
 
     /**
      * 这个是拓展接口

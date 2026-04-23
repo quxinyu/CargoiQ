@@ -70,7 +70,7 @@ public class NeOneLogisticsEventsServiceImpl extends ServiceImpl<NeOneLogisticsE
 
 
     @Override
-    public void create(String loId, String uuid, String iri, String logisticsEventBody) {
+    public void create(String loId, String uuid, String iri, String logisticsEventBody, String loIri) {
         if (StringUtils.isBlank(logisticsEventBody)) {
             throw new NeoneRequestBodyException("ne one request body must be not null");
         }
@@ -88,6 +88,7 @@ public class NeOneLogisticsEventsServiceImpl extends ServiceImpl<NeOneLogisticsE
         event.setCreateTime(LocalDateTime.now());
         event.setEventFromType(FromType.CREATE_SELF.name());
         event.setVersion(meta.getVersion().getName());
+        event.setLoIri(loIri);
 
         save(event);
         event.setNotifyEventType(NotifyEventType.LOGISTICS_EVENT_RECEIVED);

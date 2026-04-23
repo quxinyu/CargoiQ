@@ -40,7 +40,7 @@ public class NeOneLogisticsEventsController {
         String uuid = UUIDTools.generateSimpleUUID();
         String iri = this.iriGenerator.generateLogisticsEventLoId(loId, uuid);
 
-        this.logisticsObjectsEventService.create(loId, uuid, iri, oneRecordBody);
+        this.logisticsObjectsEventService.create(loId, uuid, iri, oneRecordBody, null);
 
         return ResponseEntityBuilder.create(201).header(HttpHeaders.LOCATION, iri).build();
     }

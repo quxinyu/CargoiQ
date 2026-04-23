@@ -122,7 +122,7 @@ public class LogisticsObjectCallback extends AbstractNotifyCallback<NeOneObjectN
         base.setVersion(OneRecordParseVersionType.V3.getName());
         // 报文内容
         String bodyText = getBodyTextFromIri(loIri, companyHolder);
-        neOneShipmentDataService.getObjectFromOneRecord(bodyText);
+        neOneShipmentDataService.getObjectFromOneRecord(bodyText, loIri);
         String firstMsgType = neOneDataModelProperties.getModelByCompanyName(companyHolder.getCompanyName());
         log.info(">>>>>>>>>>>>>使用 :{} 数据模型获取主单号>>>>>>>>>>>>>", firstMsgType);
         if (StringUtils.isNotBlank(bodyText)) {

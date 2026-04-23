@@ -94,7 +94,7 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
     }
 
     @Override
-    public void getObjectFromOneRecord(String oneRecordBody) {
+    public void getObjectFromOneRecord(String oneRecordBody, String loId) {
         Map record2 = CaacParseTransfer
                 .parse(oneRecordBody, "OneRecord3", "2", "JSON");
         String jsonObject = record2.get("DataText").toString();
@@ -106,6 +106,7 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
             log.error("=====================================> 转换NeOneShipmentData出现问题");
             throw new RuntimeException(e);
         }
+        shipmentData.setLoId(loId);
         save(shipmentData);
     }
 

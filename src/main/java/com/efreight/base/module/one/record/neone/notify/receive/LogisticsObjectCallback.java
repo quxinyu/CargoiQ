@@ -17,6 +17,7 @@ import com.efreight.base.module.one.record.neone.model.entity.NeOneServerCompany
 import com.efreight.base.module.one.record.neone.model.entity.NeOneSubscriptionRequest;
 import com.efreight.base.module.one.record.neone.service.NeOneCompanyService;
 import com.efreight.base.module.one.record.neone.service.NeOneLogisticsObjectsService;
+import com.efreight.base.module.one.record.neone.service.NeOneShipmentDataService;
 import com.efreight.base.module.one.record.neone.service.OneRecordSubscriptionsNotifyService;
 import com.efreight.base.module.one.record.neone.utils.HttpClientUtil;
 import com.efreight.base.module.one.record.neone.utils.IriUtils;
@@ -51,6 +52,8 @@ public class LogisticsObjectCallback extends AbstractNotifyCallback<NeOneObjectN
     private final NeOneDataModelProperties neOneDataModelProperties;
 
     private final NeOneCompanyService neOneCompanyService;
+
+    private final NeOneShipmentDataService neOneShipmentDataService;
 
     private final NeOneLogisticsObjectsService neOneLogisticsObjectService;
 
@@ -119,6 +122,7 @@ public class LogisticsObjectCallback extends AbstractNotifyCallback<NeOneObjectN
         base.setVersion(OneRecordParseVersionType.V3.getName());
         // 报文内容
         String bodyText = getBodyTextFromIri(loIri, companyHolder);
+        neOneShipmentDataService.getObjectFromOneRecord(bodyText);
         String firstMsgType = neOneDataModelProperties.getModelByCompanyName(companyHolder.getCompanyName());
         log.info(">>>>>>>>>>>>>使用 :{} 数据模型获取主单号>>>>>>>>>>>>>", firstMsgType);
         if (StringUtils.isNotBlank(bodyText)) {

@@ -1,1 +1,0 @@
-import{aN as a,aS as e,B as s,o as r}from"./vendor.g_PKK9dd.js";const t={__name:"index",setup(t){const o=a(),p=e(),{params:n,query:u}=o,{path:d}=n;return p.replace({path:`/${d}`,query:u}),(a,e)=>(r(),s("div"))}};export{t as default};

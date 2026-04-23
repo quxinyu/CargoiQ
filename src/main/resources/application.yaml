@@ -179,3 +179,15 @@ graphdb:
   sparql:
     query-endpoint: ${CARGOID_GRAPHDB_SPARQL_QUERY:}
     update-endpoint: ${CARGOID_GRAPHDB_SPARQL_UPDATE:}
+
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  type-handlers-package: com.efreight.base.module.one.record.neone.handler

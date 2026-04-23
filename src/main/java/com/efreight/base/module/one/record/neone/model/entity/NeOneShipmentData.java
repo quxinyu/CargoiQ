@@ -1,10 +1,12 @@
 package com.efreight.base.module.one.record.neone.model.entity;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.efreight.base.module.one.record.neone.handler.FastjsonListTypeHandler;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -239,7 +241,7 @@ public class NeOneShipmentData implements Serializable {
     private String loId;
 
     @JsonProperty("Dimensions")
-    @TableField(typeHandler = JacksonTypeHandler.class)
+    @TableField(typeHandler = FastjsonListTypeHandler.class)
     private List<Map<String, Object>> dimensions;
 
     @TableField(fill = FieldFill.INSERT)

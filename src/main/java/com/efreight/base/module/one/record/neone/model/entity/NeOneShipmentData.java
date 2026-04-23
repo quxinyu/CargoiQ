@@ -144,16 +144,16 @@ public class NeOneShipmentData implements Serializable {
     @JsonProperty("FlightNo")
     private String flightNo;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("FlightDate")
-    private LocalDate flightDate;
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @JsonProperty("FlightDate")
+//    private LocalDate flightDate;
 
     @JsonProperty("FlightNo2")
     private String flightNo2;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("FlightDate2")
-    private LocalDate flightDate2;
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @JsonProperty("FlightDate2")
+//    private LocalDate flightDate2;
 
     @JsonProperty("ArrivalLocationID1")
     private String arrivalLocationId1;
@@ -215,9 +215,9 @@ public class NeOneShipmentData implements Serializable {
     @JsonProperty("SignatoryConsignorAuthentication")
     private String signatoryConsignorAuthentication;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("ActualDateTime")
-    private LocalDate actualDateTime;
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @JsonProperty("ActualDateTime")
+//    private LocalDate actualDateTime;
 
     @JsonProperty("IssueAuthenticationLocation")
     private String issueAuthenticationLocation;

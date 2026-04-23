@@ -57,7 +57,7 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
         NeOneShipmentData byId = this.getById(id);
         String s = JSON.toJSONString(byId);
         ObjectMapper mapper = new ObjectMapper();
-        String responseType="OneRecord3NS";
+        String responseType="OneRecord3";
         HashMap map;
         try {
             map = mapper.readValue(s, new TypeReference<HashMap>(){});
@@ -96,7 +96,7 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
     @Override
     public void getObjectFromOneRecord(String oneRecordBody) {
         Map record2 = CaacParseTransfer
-                .parse(oneRecordBody, "OneRecord3NS", "2", "JSON");
+                .parse(oneRecordBody, "OneRecord3", "2", "JSON");
         String jsonObject = record2.get("DataText").toString();
         ObjectMapper mapper = new ObjectMapper();
         NeOneShipmentData shipmentData;

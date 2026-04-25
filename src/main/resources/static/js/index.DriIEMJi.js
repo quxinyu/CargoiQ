@@ -1,0 +1,1 @@
+import{k as s,n as a,B as o,o as t}from"./vendor.19dNZ4l7.js";import{j as r}from"./common.UHuwrk_Q.js";import"./api.D8jSEyij.js";import"./stores.CEgM6kGB.js";const e={class:"dashboard-container"},i=r(s({name:"首页",inheritAttrs:!1,__name:"index",setup:s=>(a(()=>{}),(s,a)=>(t(),o("div",e)))}),[["__scopeId","data-v-862fdfa8"]]);export{i as default};

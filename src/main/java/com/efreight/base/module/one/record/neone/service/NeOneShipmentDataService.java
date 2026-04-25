@@ -19,9 +19,15 @@ public interface NeOneShipmentDataService extends IService<NeOneShipmentData> {
 
     void getObjectFromOneRecord(String oneRecordBody, String loId);
 
+    void getObjectFromOneRecordEvent(String oneRecordBody);
+
     Result<?> check(List<NeOneShipmentSendRequest> request);
 
     Result<?> autoCheck(NeOneShipmentSendRequest request);
 
     Result<?> queryCheck(String id);
+
+    Result<?> queryEhcContent(String id);
+
+    Result<?> queryFsuEvent(String loId);
 }

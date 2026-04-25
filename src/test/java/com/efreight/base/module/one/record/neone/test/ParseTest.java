@@ -17,7 +17,9 @@ import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ParseTest {
@@ -105,6 +107,8 @@ public class ParseTest {
             "\n" +
             "SPH/EAW/BUP/XPS";
 
+    static String input = "{\"@type\": \"Waybill\", \"@context\": {\"cargo\": \"https://onerecord.iata.org/ns/cargo#\"}, \"cargo:shipment\": {\"@type\": \"cargo:shipment\", \"cargo:pieces\": [{\"@type\": \"Piece\", \"cargo:containedItems\": [{\"@type\": \"Item\", \"cargo:itemQuantity\": {\"@type\": \"Value\", \"cargo:numericalValue\": 111}}], \"cargo:involvedInActions\": [{\"@type\": [\"Loading\", \"LogisticsAction\"], \"cargo:servedActivity\": {\"@type\": [\"TransportMovement\", \"LogisticsActivity\"], \"cargo:modeCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"AIR_TRANSPORT\"}, \"cargo:movementTimes\": [{\"@type\": \"movementTime\", \"cargo:direction\": \"OUTBOUND\", \"cargo:movementTimeType\": \"ESTIMATED\", \"cargo:movementMilestone\": \"AD\", \"cargo:movementTimestamp\": \"2024-08-13T00:00:00.000Z\"}], \"cargo:arrivalLocation\": {\"@type\": \"Location\", \"cargo:locationCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"TNA\"}]}, \"cargo:departureLocation\": {\"@type\": \"Location\", \"cargo:locationCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"GHH\"}]}, \"cargo:transportIdentifier\": \"K4996\"}}, {\"@type\": [\"Loading\", \"LogisticsAction\"], \"cargo:servedActivity\": {\"@type\": [\"TransportMovement\", \"LogisticsActivity\"], \"cargo:modeCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"AIR_TRANSPORT\"}, \"cargo:movementTimes\": [{\"@type\": \"movementTime\", \"cargo:direction\": \"OUTBOUND\", \"cargo:movementTimeType\": \"ESTIMATED\", \"cargo:movementMilestone\": \"AD\", \"cargo:movementTimestamp\": \"2024-08-15T00:00:00.000Z\"}], \"cargo:arrivalLocation\": {\"@type\": \"Location\", \"cargo:locationCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"HGH\"}]}, \"cargo:departureLocation\": {\"@type\": \"Location\", \"cargo:locationCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"TNA\"}]}, \"cargo:transportIdentifier\": \"K4998\"}}, {\"@type\": [\"Loading\", \"LogisticsAction\"], \"cargo:servedActivity\": {\"@type\": [\"TransportMovement\", \"LogisticsActivity\"], \"cargo:arrivalLocation\": {\"@type\": \"Location\", \"cargo:locationCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"PEK\"}]}, \"cargo:departureLocation\": {\"@type\": \"Location\", \"cargo:locationCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"HGH\"}]}}}]}], \"cargo:totalDimensions\": [{\"@type\": \"Dimensions\", \"cargo:volume\": {\"@type\": \"Value\", \"cargo:unit\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"MC\"}, \"cargo:numericalValue\": 10.05}}], \"cargo:totalGrossWeight\": {\"@type\": \"Value\", \"cargo:unit\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"KGM\"}, \"cargo:numericalValue\": 27627}, \"cargo:specialHandlingCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"SHR\"}, {\"@type\": \"CodeListElement\", \"cargo:code\": \"EAP\"}], \"cargo:textualHandlingInstructions\": [\"HANDLING INFO\", \"OTHER SERVICE INFOMATION\"]}, \"cargo:waybillType\": {\"@id\": \"cargo:MASTER\"}, \"cargo:otherCharges\": [{\"@type\": \"OtherCharge\", \"cargo:entitlement\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"A\"}, \"cargo:otherChargeCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"WT\"}, \"cargo:chargePaymentType\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"P\"}, \"cargo:otherChargeAmount\": {\"@type\": \"CurrencyValue\", \"cargo:numericalValue\": \"969\"}}, {\"@type\": \"OtherCharge\", \"cargo:entitlement\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"A\"}, \"cargo:otherChargeCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"OC\"}, \"cargo:chargePaymentType\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"P\"}, \"cargo:otherChargeAmount\": {\"@type\": \"CurrencyValue\", \"cargo:numericalValue\": \"\"}}, {\"@type\": \"OtherCharge\", \"cargo:entitlement\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"A\"}, \"cargo:otherChargeCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"CT\"}, \"cargo:chargePaymentType\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"P\"}, \"cargo:otherChargeAmount\": {\"@type\": \"CurrencyValue\", \"cargo:numericalValue\": \"2311.00\"}}], \"cargo:houseWaybills\": [], \"cargo:waybillNumber\": \"72685281\", \"cargo:waybillPrefix\": \"618\", \"cargo:originCurrency\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"USD\"}, \"cargo:arrivalLocation\": {\"@type\": \"Location\", \"cargo:locationType\": \"AIRPORT\", \"cargo:locationCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"LAX\"}]}, \"cargo:involvedParties\": [{\"@type\": \"Party\", \"cargo:partyRole\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"SHP\"}, \"cargo:partyDetails\": {\"@type\": [\"LogisticsAgent\", \"Company\"], \"cargo:name\": \"DHL GLOBAL FORWARDING CHICAGO\", \"cargo:contactPersons\": [{\"@type\": [\"Actor\", \"Person\"], \"cargo:contactDetails\": [{\"@type\": \"ContactDetail\", \"cargo:textualValue\": \"18472337900\", \"cargo:contactDetailType\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"PHONE_NUMBER\"}}]}], \"cargo:basedAtLocation\": {\"@type\": \"Location\", \"cargo:address\": {\"@type\": \"cargo:address\", \"cargo:country\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"US\"}, \"cargo:cityCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"CHICAGO\"}, \"cargo:postalCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"60666\"}, \"cargo:regionCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"BC\"}, \"cargo:streetAddressLines\": [\"11601 W TOUHY AVENUE BLDG 895\"]}}}}, {\"@type\": \"Party\", \"cargo:partyRole\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"CNE\"}, \"cargo:partyDetails\": {\"@type\": [\"LogisticsAgent\", \"Company\"], \"cargo:name\": \"DHL GLOBAL FORWARDING CHINA\", \"cargo:contactPersons\": [{\"@type\": [\"Actor\", \"Person\"], \"cargo:contactDetails\": [{\"@type\": \"ContactDetail\", \"cargo:textualValue\": \"861069448288\", \"cargo:contactDetailType\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"PHONE_NUMBER\"}}]}], \"cargo:basedAtLocation\": {\"@type\": \"Location\", \"cargo:address\": {\"@type\": \"cargo:address\", \"cargo:country\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"CN\"}, \"cargo:cityCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"BEIJING\"}, \"cargo:postalCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"3233\"}, \"cargo:streetAddressLines\": [\"7F EAST ZONE NO 566 SHUNPING RD\"]}}}}, {\"@type\": \"Party\", \"cargo:partyRole\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"REF\"}, \"cargo:partyDetails\": {\"@type\": [\"LogisticsAgent\", \"Company\"], \"cargo:contactPersons\": [{\"@type\": [\"Actor\", \"Person\"], \"employeeId\": \"AGT\", \"salutation\": \"AGENTINFO\"}], \"cargo:basedAtLocation\": {\"@type\": \"Location\", \"cargo:locationType\": \"AIRPORT\", \"cargo:locationCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"GHH\"}]}}}, {\"@type\": \"Party\", \"cargo:partyRole\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"AGT\"}, \"cargo:partyDetails\": {\"@type\": [\"LogisticsAgent\", \"Company\"], \"cargo:name\": \"AGENT INFO\", \"cargo:basedAtLocation\": {\"@type\": \"Location\", \"cargo:address\": {\"@type\": \"cargo:address\", \"cargo:cityCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"ORD\"}}}, \"cargo:otherIdentifiers\": [{\"@type\": \"OtherIdentifier\", \"cargo:textualValue\": \"3323ED\", \"cargo:otherIdentifierType\": \"ACCOUNT NUMBER\"}], \"cargo:iataCargoAgentCode\": \"1111111\", \"cargo:iataCargoAgentLocationIdentifier\": \"1234\"}}], \"cargo:waybillLineItems\": [{\"@type\": \"WaybillLineItem\", \"cargo:total\": {\"@type\": \"Value\", \"cargo:numericalValue\": 969}, \"cargo:rateCharge\": {\"@type\": \"Value\", \"cargo:numericalValue\": 3}, \"cargo:rateClassCode\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"Q\"}, \"cargo:lineItemNumber\": 1, \"cargo:pieceCountForRate\": 111, \"cargo:grossWeightForRate\": {\"@type\": \"Value\", \"cargo:unit\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"KGM\"}, \"cargo:numericalValue\": 27627}, \"cargo:goodsDescriptionForRate\": \"CONSOL\", \"cargo:volumetricWeightForRate\": {\"@type\": \"VolumetricWeight\", \"cargo:chargeableWeight\": {\"@type\": \"Value\", \"cargo:unit\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"KGM\"}, \"cargo:numericalValue\": 323}}}, {\"@type\": \"WaybillLineItem\", \"cargo:slacForRate\": 4, \"cargo:lineItemNumber\": 2}, {\"@type\": \"WaybillLineItem\", \"cargo:lineItemNumber\": 3, \"cargo:dimensionsForRate\": {\"@type\": \"Dimensions\", \"cargo:width\": {\"@type\": \"Value\", \"cargo:unit\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"CMT\"}, \"cargo:numericalValue\": 23}, \"cargo:height\": {\"@type\": \"Value\", \"cargo:unit\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"CMT\"}, \"cargo:numericalValue\": 32}, \"cargo:length\": {\"@type\": \"Value\", \"cargo:unit\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"CMT\"}, \"cargo:numericalValue\": 123}}, \"cargo:pieceCountForRate\": 111}, {\"@type\": \"WaybillLineItem\", \"cargo:lineItemNumber\": 4, \"cargo:dimensionsForRate\": {\"cargo:volume\": {\"@type\": \"Value\", \"cargo:unit\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"MC\"}, \"cargo:numericalValue\": 10.05}}}, {\"@type\": \"WaybillLineItem\", \"cargo:hsCodeForRate\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"HS873233\"}, \"cargo:lineItemNumber\": 5}], \"cargo:departureLocation\": {\"@type\": \"Location\", \"cargo:locationType\": \"AIRPORT\", \"cargo:locationCodes\": [{\"@type\": \"CodeListElement\", \"cargo:code\": \"GHH\"}]}, \"cargo:otherChargesIndicator\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"P\"}, \"cargo:carrierDeclarationDate\": \"2022-05-13T00:00:00.000Z\", \"cargo:carrierDeclarationPlace\": \"YIP\", \"cargo:declaredValueForCustoms\": {\"@type\": \"CurrencyValue\", \"cargo:currencyUnit\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"USD\"}, \"cargo:numericalValue\": 27627}, \"cargo:weightValuationIndicator\": {\"@type\": \"CodeListElement\", \"cargo:code\": \"P\"}, \"cargo:carrierDeclarationSignature\": \"FDS\", \"cargo:consignorDeclarationSignature\": \"FDS\"}";
+
     @Test
     public void testG(){
         JSONArray jsonArray = JSON.parseArray(test);
@@ -122,12 +126,13 @@ public class ParseTest {
     public void test() throws JsonProcessingException {
 //        String jsonStr = FileUtil.readUtf8String("D:/Code_EF/工作文档/新加坡json.json");
         ObjectMapper mapper = new ObjectMapper();
-        String responseType="OneRecord3NS";
+        String responseType="OneRecord3";
         HashMap map = mapper.readValue(jsonTest, new TypeReference<HashMap>(){});
+        map.put("MsgType", "FWB");
         String result = CaacParseTransfer.transfer(map, responseType);
 //        System.out.println(result);
         Map record2 = CaacParseTransfer
-                .parse(result, "OneRecord3NS", "2", "JSON");
+                .parse(result, "OneRecord3", "2", "JSON");
         String dataText2 = record2.get("DataText").toString();
         ObjectMapper mapper2 = new ObjectMapper();
         NeOneShipmentData shipmentData = mapper2.readValue(dataText2, NeOneShipmentData.class);
@@ -206,10 +211,12 @@ public class ParseTest {
         eventCode.setCodeDescription("FSU Status Codes");
         event.setEventCode(eventCode);
 
-        LogisticsEventFSU.CodeListElement exceptionHandlingCode = new LogisticsEventFSU.CodeListElement();
-        exceptionHandlingCode.setCode("SPC-CHK");
-        exceptionHandlingCode.setCodeDescription("危险品(DGR)核对有误");
-        event.setExceptionHandlingCode(exceptionHandlingCode);
+        List<LogisticsEventFSU.ExceptionHandlingCode> exceptionHandlingCodes = new ArrayList<>();
+        LogisticsEventFSU.ExceptionHandlingCode code = new LogisticsEventFSU.ExceptionHandlingCode();
+        code.setCode("SPC-CHK");
+        code.setCodeDescription("危险品(DGR)核对有误");
+        exceptionHandlingCodes.add(code);
+        event.setExceptionHandlingCodes(exceptionHandlingCodes);
 
         LogisticsEventFSU.LogisticsObject logisticsObject = new LogisticsEventFSU.LogisticsObject();
         logisticsObject.setId(loid);
@@ -248,64 +255,70 @@ public class ParseTest {
         String generatedJson = LogisticsEventUtils.toJson(event, true);
         System.out.println("====== 生成的 JSON ======");
         System.out.println(generatedJson);
+    }
 
+    static String SAC = "{\n" +
+            "  \"@type\" : \"cargo:LogisticsEvent\",\n" +
+            "  \"@id\" : \"https://sc-onerecordapi.cathaycargo.com/onerecordapi/logistics-objects/C6A7C69C-7FDB-40BB-8180-C9C439E8B3EB/logistics-events/e8250a63-3dfb-11f1-9931-005056a3e0d3\",\n" +
+            "  \"@context\" : {\n" +
+            "    \"cargo\" : \"https://onerecord.iata.org/ns/cargo#\"\n" +
+            "  },\n" +
+            "  \"cargo:creationDate\" : \"2026-04-25T08:34:08.9076953+08:00\",\n" +
+            "  \"cargo:eventCode\" : {\n" +
+            "    \"@type\" : \"cargo:CodeListElement\",\n" +
+            "    \"cargo:code\" : \"SAC\",\n" +
+            "    \"cargo:codeDescription\" : \"FSU Status Codes\"\n" +
+            "  },\n" +
+            "  \"cargo:exceptionHandlingCodes\" : [ {\n" +
+            "    \"@type\" : \"cargo:EHC\",\n" +
+            "    \"cargo:Code\" : \"SPC-CHK\",\n" +
+            "    \"cargo:codeDescription\" : \"危险品(DGR)核对有误\"\n" +
+            "  } ],\n" +
+            "  \"cargo:eventFor\" : {\n" +
+            "    \"@id\" : \"https://sc-onerecordapi.cathaycargo.com/onerecordapi/logistics-objects/C6A7C69C-7FDB-40BB-8180-C9C439E8B3EB\",\n" +
+            "    \"@type\" : \"cargo:LogisticsObject\",\n" +
+            "    \"cargo:waybill\" : {\n" +
+            "      \"@type\" : \"cargo:Waybill\",\n" +
+            "      \"cargo:arrivalLocation\" : {\n" +
+            "        \"@type\" : \"cargo:Location\",\n" +
+            "        \"cargo:locationCodes\" : {\n" +
+            "          \"@type\" : \"cargo:CodeListElement\",\n" +
+            "          \"cargo:code\" : \"ORD\"\n" +
+            "        }\n" +
+            "      },\n" +
+            "      \"cargo:departureLocation\" : {\n" +
+            "        \"@type\" : \"cargo:Location\",\n" +
+            "        \"cargo:locationCodes\" : {\n" +
+            "          \"@type\" : \"cargo:CodeListElement\",\n" +
+            "          \"cargo:code\" : \"HKG\"\n" +
+            "        }\n" +
+            "      },\n" +
+            "      \"cargo:waybillNumber\" : \"160-08716945\",\n" +
+            "      \"cargo:waybillPrefix\" : \"160\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"cargo:eventLocation\" : {\n" +
+            "    \"@type\" : \"cargo:Location\"\n" +
+            "  },\n" +
+            "  \"cargo:eventName\" : \"CONVERT SAC TO LOGISTICSEVENT SUCCESSFULLY - AWB 160-08716945\",\n" +
+            "  \"cargo:eventTimeType\" : \"SCHEDULED\",\n" +
+            "  \"cargo:externalReferences\" : {\n" +
+            "    \"@type\" : \"cargo:ExternalReference\"\n" +
+            "  },\n" +
+            "  \"cargo:recordingActor\" : {\n" +
+            "    \"@type\" : \"cargo:Actor\"\n" +
+            "  }\n" +
+            "}";
 
-        // ================= 2. 将 JSON 解析为对象 =================
-        // 这里可以直接放入你提供的完整 JSON 字符串
-        String rawJson = "{\n" +
-                "  \"@type\" : \"cargo:LogisticsEvent\",\n" +
-                "  \"@id\" : \"https://sc-onerecordapi.cathaycargo.com/onerecordapi/logistics-objects/C6A7C69C-7FDB-40BB-8180-C9C439E8B3EB/logistics-events/e8250a63-3dfb-11f1-9931-005056a3e0d3\",\n" +
-                "  \"@context\" : {\n" +
-                "    \"cargo\" : \"https://onerecord.iata.org/ns/cargo#\"\n" +
-                "  },\n" +
-                "  \"cargo:creationDate\" : \"2026-04-22T14:36:32.1705545+08:00\",\n" +
-                "  \"cargo:eventCode\" : {\n" +
-                "    \"@type\" : \"cargo:CodeListElement\",\n" +
-                "    \"cargo:Code\" : \"SAC\",\n" +
-                "    \"cargo:codeDescription\" : \"FSU Status Codes\"\n" +
-                "  },\n" +
-                "  \"cargo:exceptionHandlingCode\" : {\n" +
-                "    \"@type\" : \"cargo:CodeListElement\",\n" +
-                "    \"cargo:Code\" : \"SPC-CHK\",\n" +
-                "    \"cargo:codeDescription\" : \"危险品(DGR)核对有误\"\n" +
-                "  },\n" +
-                "  \"cargo:eventFor\" : {\n" +
-                "    \"@id\" : \"https://sc-onerecordapi.cathaycargo.com/onerecordapi/logistics-objects/C6A7C69C-7FDB-40BB-8180-C9C439E8B3EB\",\n" +
-                "    \"@type\" : \"cargo:LogisticsObject\",\n" +
-                "    \"cargo:waybill\" : {\n" +
-                "      \"@type\" : \"cargo:Waybill\",\n" +
-                "      \"cargo:arrivalLocation\" : {\n" +
-                "        \"@type\" : \"cargo:Location\",\n" +
-                "        \"cargo:locationCodes\" : {\n" +
-                "          \"@type\" : \"cargo:CodeListElement\",\n" +
-                "          \"cargo:Code\" : \"ORD\"\n" +
-                "        }\n" +
-                "      },\n" +
-                "      \"cargo:departureLocation\" : {\n" +
-                "        \"@type\" : \"cargo:Location\",\n" +
-                "        \"cargo:locationCodes\" : {\n" +
-                "          \"@type\" : \"cargo:CodeListElement\",\n" +
-                "          \"cargo:Code\" : \"HKG\"\n" +
-                "        }\n" +
-                "      },\n" +
-                "      \"cargo:waybillNumber\" : \"160-08716945\",\n" +
-                "      \"cargo:waybillPrefix\" : \"160\"\n" +
-                "    }\n" +
-                "  },\n" +
-                "  \"cargo:eventLocation\" : {\n" +
-                "    \"@type\" : \"cargo:Location\"\n" +
-                "  },\n" +
-                "  \"cargo:eventName\" : \"CONVERT SAC TO LOGISTICSEVENT SUCCESSFULLY - AWB 160-08716945\",\n" +
-                "  \"cargo:eventTimeType\" : \"SCHEDULED\",\n" +
-                "  \"cargo:externalReferences\" : {\n" +
-                "    \"@type\" : \"cargo:ExternalReference\"\n" +
-                "  },\n" +
-                "  \"cargo:recordingActor\" : {\n" +
-                "    \"@type\" : \"cargo:Actor\"\n" +
-                "  }\n" +
-                "}"; // 篇幅原因简写，你可以替换为完整的
-
-        LogisticsEventFSU parsedEvent = LogisticsEventUtils.fromJson(rawJson);
+    @Test
+    public void testSACtoJson(){
+        LogisticsEventFSU parsedEvent = LogisticsEventUtils.fromJson(SAC);
+        String jsonString = JSON.toJSONString(parsedEvent.getExceptionHandlingCodes());
+        String code = parsedEvent.getEventCode().getCode();
+        String loId = parsedEvent.getEventFor().getId();
+        System.out.println("loId: " + loId);
+        System.out.println("Event Code: " + code);
+        System.out.println("Exception Handling Codes: " + jsonString);
         System.out.println("\n====== 解析出的对象 ======");
         System.out.println("Creation Date: " + parsedEvent.getCreationDate());
         System.out.println("Event Name: " + parsedEvent.getEventName());

@@ -21,6 +21,7 @@ import com.efreight.base.module.one.record.neone.model.request.NeOneShipmentSend
 import com.efreight.base.module.one.record.neone.service.NeOneLogisticsEventsService;
 import com.efreight.base.module.one.record.neone.service.NeOneLogisticsObjectsService;
 import com.efreight.base.module.one.record.neone.service.NeOneShipmentDataService;
+import com.efreight.base.module.one.record.neone.utils.LogisticsEventUtils;
 import com.efreight.base.module.one.record.neone.utils.UUIDTools;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -47,6 +48,7 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
     @Override
     public IPage<?> pageList(NeOneShipmentDataRequest req) {
         LambdaQueryWrapper<NeOneShipmentData> wrapper = Wrappers.lambdaQuery();
+        wrapper.orderByDesc(NeOneShipmentData::getCreateTime);
         wrapper.like(StringUtils.isNotBlank(req.getMawbCode()), NeOneShipmentData::getMawbCode, req.getMawbCode());
         wrapper.like(StringUtils.isNotBlank(req.getLoId()), NeOneShipmentData::getLoId, req.getLoId());
         return this.page(new Page<>(req.getCurrent(), req.getSize()), wrapper);
@@ -108,6 +110,24 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
         }
         shipmentData.setLoId(loId);
         save(shipmentData);
+    }
+
+    @Override
+    public void getObjectFromOneRecordEvent(String oneRecordBody) {
+        LogisticsEventFSU parsedEvent = LogisticsEventUtils.fromJson(oneRecordBody);
+        String ehcContent = JSON.toJSONString(parsedEvent.getExceptionHandlingCodes());
+        String code = parsedEvent.getEventCode().getCode();
+        String loId = parsedEvent.getEventFor().getId();
+        LambdaQueryWrapper<NeOneShipmentData> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(NeOneShipmentData::getLoId, loId);
+        List<NeOneShipmentData> neOneShipmentData = getBaseMapper().selectList(wrapper);
+        if(CollectionUtils.isNotEmpty(neOneShipmentData)){
+            neOneShipmentData.forEach(data -> {
+                data.setFsuStatus(code);
+                data.setEhcContent(ehcContent);
+                updateById(data);
+            });
+        }
     }
 
     @Override
@@ -181,6 +201,31 @@ public class NeOneShipmentDataServiceImpl extends ServiceImpl<NeOneShipmentDataM
     public Result<?> queryCheck(String id) {
         NeOneShipmentData byId = getById(id);
         return Result.ok(byId.getCheckResult());
+    }
+
+    @Override
+    public Result<?> queryEhcContent(String id) {
+        NeOneShipmentData byId = getById(id);
+        String ehcContent = byId.getEhcContent();
+        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
+        objectObjectHashMap.put("ehcContent", ehcContent);
+        return Result.ok(objectObjectHashMap);
+    }
+
+    @Override
+    public Result<?> queryFsuEvent(String loId) {
+        LambdaQueryWrapper<NeOneShipmentData> wrapper = Wrappers.lambdaQuery();
+        wrapper.like(NeOneShipmentData::getLoId, loId);
+        wrapper.orderByDesc(NeOneShipmentData::getCreateTime);
+        List<NeOneShipmentData> neOneShipmentData = getBaseMapper().selectList(wrapper);
+        if(CollectionUtils.isNotEmpty(neOneShipmentData)){
+            NeOneShipmentData data = neOneShipmentData.get(0);
+            HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
+            objectObjectHashMap.put("fsuStatus", data.getFsuStatus());
+            objectObjectHashMap.put("ehcContent", data.getEhcContent());
+            return Result.ok(objectObjectHashMap);
+        }
+        return Result.ok();
     }
 
     private String generateLogisticsEvent(NeOneShipmentData shipmentData,

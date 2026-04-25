@@ -78,5 +78,11 @@ public class NeOneShipmentDataController {
         return this.neOneShipmentDataService.queryCheck(id);
     }
 
+    @ApiOperation(value = "查询核验结果", notes = "查询核验结果")
+    @GetMapping("/query-ehc-content")
+    public Result<?> queryEhcContent(@RequestParam String id) {
+        return this.neOneShipmentDataService.queryEhcContent(id);
+    }
+
 
 }

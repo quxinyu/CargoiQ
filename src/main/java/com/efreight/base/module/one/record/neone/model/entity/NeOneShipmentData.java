@@ -258,4 +258,8 @@ public class NeOneShipmentData implements Serializable {
 
     private String aiCheckStatus;
 
+    private String fsuStatus;
+
+    private String ehcContent;
+
 }

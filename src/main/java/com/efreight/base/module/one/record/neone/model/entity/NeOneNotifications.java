@@ -33,4 +33,8 @@ public class NeOneNotifications implements Serializable {
     private String notifyBody;
 
     private LocalDateTime createTime;
+
+    private String fsuStatus;
+
+    private String ehcContent;
 }

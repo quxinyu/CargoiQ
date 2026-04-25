@@ -1,5 +1,6 @@
 package com.efreight.base.module.one.record.neone.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -10,6 +11,7 @@ import com.efreight.base.module.one.record.neone.mapper.NeOneNotificationsMapper
 import com.efreight.base.module.one.record.neone.model.entity.NeOneLogisticsEvents;
 import com.efreight.base.module.one.record.neone.model.entity.NeOneLogisticsObjects;
 import com.efreight.base.module.one.record.neone.model.entity.NeOneNotifications;
+import com.efreight.base.module.one.record.neone.model.onerecord.LogisticsEventFSU;
 import com.efreight.base.module.one.record.neone.model.vo.NeOneNotificationsVO;
 import com.efreight.base.module.one.record.neone.notify.receive.NeOneEventNotifications;
 import com.efreight.base.module.one.record.neone.notify.receive.NeOneObjectNotifications;
@@ -18,11 +20,13 @@ import com.efreight.base.module.one.record.neone.service.NeOneLogisticsEventsSer
 import com.efreight.base.module.one.record.neone.service.NeOneLogisticsObjectsService;
 import com.efreight.base.module.one.record.neone.service.NeOneNotifyService;
 import com.efreight.base.module.one.record.neone.utils.IriUtils;
+import com.efreight.base.module.one.record.neone.utils.LogisticsEventUtils;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -100,7 +104,23 @@ public class NeOneNotifyServiceImpl extends ServiceImpl<NeOneNotificationsMapper
     public IPage<?> notifyPage(NeOneNotificationsVO requestParam) {
         LambdaQueryWrapper<NeOneNotifications> wrapper = Wrappers.lambdaQuery();
         wrapper.orderByDesc(NeOneNotifications::getCreateTime);
-        return page(new Page<>(requestParam.getCurrent(), requestParam.getSize()), wrapper);
+        Page<NeOneNotifications> page = page(new Page<>(requestParam.getCurrent(), requestParam.getSize()), wrapper);
+        List<NeOneNotifications> records = page.getRecords();
+        if(CollectionUtils.isNotEmpty( records)){
+            records.forEach(record -> {
+                String s = notifyDetails(record.getId());
+                if(s.contains("SAC") || s.contains("RCS")){
+                    LogisticsEventFSU parsedEvent = LogisticsEventUtils.fromJson(s);
+                    String ehcContent = JSON.toJSONString(parsedEvent.getExceptionHandlingCodes());
+                    String code = parsedEvent.getEventCode().getCode();
+                    record.setFsuStatus(code);
+                    record.setEhcContent(ehcContent);
+                }
+            });
+//            updateBatchById( records);
+        }
+        page.setRecords(records);
+        return page;
     }
 
     @Override

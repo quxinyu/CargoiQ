@@ -12,10 +12,7 @@ import com.efreight.base.module.one.record.neone.helper.IriGenerator;
 import com.efreight.base.module.one.record.neone.model.entity.NeOneLogisticsEvents;
 import com.efreight.base.module.one.record.neone.model.entity.NeOneLogisticsObjects;
 import com.efreight.base.module.one.record.neone.model.entity.NeOneServerCompanyHolder;
-import com.efreight.base.module.one.record.neone.service.NeOneCompanyService;
-import com.efreight.base.module.one.record.neone.service.NeOneLogisticsEventsService;
-import com.efreight.base.module.one.record.neone.service.NeOneLogisticsObjectsService;
-import com.efreight.base.module.one.record.neone.service.OneRecordSubscriptionsNotifyService;
+import com.efreight.base.module.one.record.neone.service.*;
 import com.efreight.base.module.one.record.neone.utils.HttpClientUtil;
 import com.efreight.base.module.one.record.neone.utils.IriUtils;
 import com.efreight.base.module.one.record.neone.utils.KeyLockTokenUtils;
@@ -53,6 +50,8 @@ public class LogisticsEventCallback extends AbstractNotifyCallback<NeOneEventNot
     private final OneRecordSubscriptionsNotifyService oneRecordSubscriptionsNotifyService;
 
     private final HttpClientUtil httpClientUtil;
+
+    private final NeOneShipmentDataService neOneShipmentDataService;
 
     private final EventBus asyncNeOneEventBus;
 
@@ -123,6 +122,7 @@ public class LogisticsEventCallback extends AbstractNotifyCallback<NeOneEventNot
         neOneLogisticsEvents.setLoIri(neOneLogisticsObjects.getIri());
         neOneLogisticsEvents.setCreateTime(LocalDateTime.now(ZoneId.of("Asia/Shanghai")));
         String bodyText = getBodyTextFromIri(hasLogisticsEvent, companyHolder);
+        neOneShipmentDataService.getObjectFromOneRecordEvent(bodyText);
         if (StringUtils.isNotBlank(bodyText)) {
             String eventCode = CaacParseTransferTools.resolveFsuEventType(bodyText);
             neOneLogisticsEvents.setEventType(eventCode);
